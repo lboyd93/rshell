@@ -27,19 +27,24 @@ int main(int argc, char *argv[]){
 		//cout << cmndline;
 			
 		if(cmndline == "exit")
-			break;
+			exit(0);
 		
 		
-		//int i = fork();
-		//if(i==0) {
-		//	if (-1==execvp(argv[0], argv)) {
-		//		perror("execvp");
-		//	}
-		//}
-		//else{
-		//	wait(0);
-		//	cout << "HI!";
-		//}
+		int i = fork();
+		if(i==0) {
+			//error check execvp
+			if (-1==execvp(argv[0], argv)) {
+				perror("execvp");
+			}
+			//in child
+			else
+				execvp(argv[0],argv);
+		}
+		//in parent
+		else{
+			wait(0);
+			cout << "HI!";
+		}
 	}
 	
 	return 0;
