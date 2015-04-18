@@ -9,7 +9,7 @@
 #include <string.h>	//strtok
 using namespace std;
 
-int main(/*int argc, char *argv[]*/){	//can not figure out how to use argv
+int main(int argc, char *argv[]){
 	
 	char *login = getlogin();
 	
@@ -52,8 +52,22 @@ int main(/*int argc, char *argv[]*/){	//can not figure out how to use argv
 		Tok=strtok(cmndline, delim);
 			
 		//cout << Tok ;
-		//use argv to store the tokens in
-			
+		
+		int size=input.size()+1;
+		char **argv=new char*[size];
+		
+		int pos=0;
+		while(Tok != NULL)
+		{
+			argv[pos]=Tok;
+			pos++;
+			Tok = strtok(NULL,delim);
+		}
+		argv[pos]=NULL;
+		
+		for(int i=0; i<size; i++)
+			cout << argv[i] << " ";
+		
 		int i = fork();
 		if(i==0) {
 			//error check execvp
