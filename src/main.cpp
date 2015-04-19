@@ -42,11 +42,15 @@ int main(/*int argc, char *argv[]*/){
 		//get the input from user
 		getline(cin, input);
 		
+		if(input == "")
+			continue;
+		
 		//char *cstr[input.length()+1];
 		//change input from string to cstring
 		strcpy(cmndline, input.c_str());
-			
-		if(!strcmp(cmndline, "exit"))
+		
+		//check if user inputs exit	
+		if( input.find("exit") != string::npos )
 			exit(0);	
 		
 		//tokenize the commandline
