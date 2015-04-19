@@ -9,8 +9,21 @@
 #include <string.h>	//strtok
 using namespace std;
 
+//checks for comments and if stuff is after comments, it deletes it
+void checkcomm(string &str){
+	char comment='#';
+	for(unsigned pos=0; pos < str.size(); pos++){
+		if(str[pos] == comment){
+			for(unsigned i=pos; i < str.size(); i++){
+				str.erase(pos,str.size()-1);
+			}
+		}
+	}
+}
+
 int main(/*int argc, char *argv[]*/){
 	
+	//char connector[3] = {'&', '|', ';'}; 	
 	//get username and hostname
 	char login[100];
 	
@@ -42,16 +55,19 @@ int main(/*int argc, char *argv[]*/){
 		//get the input from user
 		getline(cin, input);
 		
-		if(input == "")
+		//check if user pushes enter or comment	
+		if(input == "" || input == "#")
 			continue;
-		
-		//char *cstr[input.length()+1];
-		//change input from string to cstring
-		strcpy(cmndline, input.c_str());
 		
 		//check if user inputs exit	
 		if( input.find("exit") != string::npos )
 			exit(0);	
+				
+		//check for comments
+		checkcomm(input);
+
+		//change input from string to cstring
+		strcpy(cmndline, input.c_str());
 		
 		//tokenize the commandline
 		char *Tok;
