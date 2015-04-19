@@ -9,23 +9,26 @@
 #include <string.h>	//strtok
 using namespace std;
 
-int main(int argc, char *argv[]){
+int main(/*int argc, char *argv[]*/){
 	
-	char *login = getlogin();
+	//get username and hostname
+	char login[100];
 	
-	if(login == NULL){
-		perror("get login");
+	if(getlogin_r(login, sizeof(login)-1)){
+		perror("Error with getlogin_r");
 	}
-	//char host[100];
 	
-	//if(getlogin_r(login, sizeof(user)-1)){
-	//	perror("Error with getlogin");
-	//}
+	char host[100];
 	
+	if(-1 == gethostname(host,sizeof(host)-1)){
+        	perror("Error with gethostname.");
+	}
 	
-	//if(-1 == gethostname(host,sizeof(host)-1)){
-        //	perror("Error with gethostname.");
-	//}
+	for(int pos=0; pos<30; pos++){
+		if(host[pos] == '.'){
+			host[pos] = '\0';
+		}
+	}
 	
 	//string cmndline;
 	//execute
@@ -34,7 +37,7 @@ int main(int argc, char *argv[]){
 		string input;
 		char cmndline[1024];
 		
-		cout << login <<  "$ ";
+		cout << login << "@" << host << "$ ";
 		
 		//get the input from user
 		getline(cin, input);
@@ -44,7 +47,7 @@ int main(int argc, char *argv[]){
 		strcpy(cmndline, input.c_str());
 			
 		if(!strcmp(cmndline, "exit"))
-			exit(1);	
+			exit(0);	
 		
 		//tokenize the commandline
 		char *Tok;
@@ -65,22 +68,35 @@ int main(int argc, char *argv[]){
 		}
 		argv[pos]=NULL;
 		
-		for(int i=0; i<size; i++)
-			cout << argv[i] << " ";
+		//for(int i=0; i<size; i++)
+		//	cout << argv[i] << " ";
 		
+		int status = 0;
 		int i = fork();
-		if(i==0) {
+		if(i == -1){
+			perror("There was an error with fork()");
+			exit(1);
+		}
+		else if(i == 0) {
 			//error check execvp
 			if (-1==execvp(argv[0], argv)) {
 				perror("execvp didn't work correctly");
+				exit(1);
 			}
 		}
 		//in parent
-		else{
-			if(wait(0)==-1)
+		else if(i > 0){
+			if(wait(&status)==-1){
 				perror("Error in wait");
-			cout << "In parent waiting.";
+				return -1;
+			}
+			if(WEXITSTATUS(status) == 3){
+				//delete argv;
+				return -1;
+			}
 		}
-	}	
+	}
+	//delete argv;
+	
 	return 0;
 }
