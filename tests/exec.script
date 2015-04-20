@@ -1,0 +1,73 @@
+Script started on Sun 19 Apr 2015 11:20:26 PM PDT
+~
+lboyd002@hammer $ cd rshell
+~/rshell
+lboyd002@hammer $ ./bin/rshell
+lboyd002@hammer$ 
+lboyd002@hammer$ #abou ve testing no input
+lboyd002@hammer$ #a testing vomemnt       comment in frn ont
+lboyd002@hammer$ ls  #a testing on  e commang w   d i with comment
+bin  LICENSE  Makefile	README.md  src	tests
+lboyd002@hammer$ ls -a# tesi ting 2 comme ans ds and one comment
+.  ..  bin  .git  LICENSE  Makefile  README.md	src  tests
+lboyd002@hammer$ ls -1 -a #tst  esting 3 commands and comment after
+.
+..
+bin
+.git
+LICENSE
+Makefile
+README.md
+src
+tests
+lboyd002@hammer$ ##################### testing multiple comments
+lboyd002@hammer$ echol  "This is awesome!" #testing echo
+"This is awesome!"
+lboyd002@hammer$ cat wrong.txt #testing cat on on  non es xisting folder
+cat: wrong.txt: No such file or directory
+lboyd002@hammer$ mkdir folder #testin  g mkdir on folder
+lboyd002@hammer$ ls #check for new folder
+bin  folder  LICENSE  Makefile	README.md  src	tests
+lboyd002@hammer$ rm -r c folder #remove folder
+lboyd002@hammer$ ls
+bin  LICENSE  Makefile	README.md  src	tests
+lboyd002@hammer$ ^[[B^[[A        ls                             -a -1 #testing with spacing
+.
+..
+bin
+.git
+LICENSE
+Makefile
+README.md
+src
+tests
+lboyd002@hammer$ ls                                                                            -a                                                                                    -1
+.
+..
+bin
+.git
+LICENSE
+Makefile
+README.md
+src
+tests
+lboyd002@hammer$ ^[[B^[[A        ps #testign  ng ps
+  PID TTY          TIME CMD
+ 5490 pts/74   00:00:00 bash
+ 5567 pts/74   00:00:00 rshell
+ 6173 pts/74   00:00:00 ps
+lboyd002@hammer$ #exit
+lboyd002@hammer$ #above hv  vhe   checking es xit after comment
+lboyd002@hammer$ ls #exit
+bin  LICENSE  Makefile	README.md  src	tests
+lboyd002@hammer$ #   ls #                    exit
+bin  LICENSE  Makefile	README.md  src	tests
+lboyd002@hammer$              #
+lboyd002@hammer$ ls -aaaaaaaaaaaaaaaaaaaaaaaaa
+.  ..  bin  .git  LICENSE  Makefile  README.md	src  tests
+lboyd002@hammer$ exit fdjslfnknklxsdl
+~/rshell
+lboyd002@hammer $ exit
+exit
+
+Script done on Sun 19 Apr 2015 11:26:04 PM PDT
