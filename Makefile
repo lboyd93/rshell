@@ -6,4 +6,4 @@ all: rshell
 
 rshell:
 	mkdir bin
-	$(comp) $(opt) ./src/main.cpp -o /bin/rshell
+	$(comp) $(opt) ./src/main.cpp -o ./bin/rshell
