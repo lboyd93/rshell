@@ -7,23 +7,41 @@
 #include <sys/wait.h>	//wait
 #include <unistd.h>	//execvp, fork, gethost, getlogin
 #include <string.h>	//strtok
+#include <vector>
 using namespace std;
 
 //checks for comments and if stuff is after comments, it deletes it
 void checkcomm(string &str){
-	char comment='#';
-	for(unsigned pos=0; pos < str.size(); pos++){
-		if(str[pos] == comment){
-			for(unsigned i=pos; i < str.size(); i++){
-				str.erase(pos,str.size()-1);
-			}
-		}
-	}
+	size_t comment = str.find("#");
+	if(comment != string :: npos)
+		str.erase(comment);
 }
 
-int main(/*int argc, char *argv[]*/){
+//could not finish
+//finds && and ||, puts numbers 1 and 2 respectively
+//to keep track of them in a vector
+vector<int> orderCmnds(char *cmnds, int size){
+	vector<int> vec;
+	int pos=0;
+	while(cmnds[pos] != '\0'){
+		if((cmnds[pos] == '&') && pos+1 < size  && (cmnds[pos+1] == '&')){
+			vec.push_back(1);
+			cmnds[pos+1]= ' ';
+			pos = pos+2;
+		}
+		if((cmnds[pos] == '|') && pos+1 < size && (cmnds[pos+1] == '|')){
+			vec.push_back(2);
+			cmnds[pos+1] = ' ';
+			pos = pos + 2; 
+		}
+		else
+			pos++;			
+	}
+	return vec;
+}
+
+int main(/*int argc, char *argv[]*/){	//couldn't get argv to work
 	
-	//char connector[3] = {'&', '|', ';'}; 	
 	//get username and hostname
 	char login[100];
 	
@@ -43,7 +61,6 @@ int main(/*int argc, char *argv[]*/){
 		}
 	}
 	
-	//string cmndline;
 	//execute
 	while(1){
 		
@@ -55,45 +72,49 @@ int main(/*int argc, char *argv[]*/){
 		//get the input from user
 		getline(cin, input);
 		
-		//check if user pushes enter or comment	
-		if(input == "" || input == "#")
+		//check if user pushes enter 
+		if(input == "")
 			continue;
 		
+		//check for comments
+		checkcomm(input);
+
 		//check if user inputs exit	
 		if( input.find("exit") != string::npos )
 			exit(0);	
 				
-		//check for comments
-		checkcomm(input);
 
 		//change input from string to cstring
 		strcpy(cmndline, input.c_str());
 		
 		//tokenize the commandline
-		char *Tok;
+		char *tok; //*save;
 		char delim[]= " ;&|";
-		Tok=strtok(cmndline, delim);
-			
-		//cout << Tok ;
 		
 		int size=input.size()+1;
+		//vector<int> order;
+		
+		tok=strtok(cmndline, delim);
+			
 		char **argv=new char*[size];
 		
 		int pos=0;
-		while(Tok != NULL)
+		while(tok != NULL)
 		{
-			argv[pos]=Tok;
+			argv[pos]=tok;
 			pos++;
-			Tok = strtok(NULL,delim);
+			tok = strtok(NULL,delim);
 		}
 		argv[pos]=NULL;
 		
-		//for(int i=0; i<size; i++)
-		//	cout << argv[i] << " ";
+		
+		//for(unsigned i=0; i < order.size(); i++)
+		//	cout << order[i] << ' ';
 		
 		int status = 0;
 		int i = fork();
 		if(i == -1){
+			//error check fork
 			perror("There was an error with fork()");
 			exit(1);
 		}
@@ -106,12 +127,13 @@ int main(/*int argc, char *argv[]*/){
 		}
 		//in parent
 		else if(i > 0){
+			//error check parent
 			if(wait(&status)==-1){
 				perror("Error in wait");
 				return -1;
 			}
 			if(WEXITSTATUS(status) == 3){
-				//delete argv;
+				delete argv;
 				return -1;
 			}
 		}
