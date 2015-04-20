@@ -7,4 +7,6 @@ Rshell works with comments in the command line and also multple flags.
 
 #BUGS
 
-This program has a few bugs. It is not working when you input multiple commands. Rshell only works when you have one command with flags, e.g. "ls -a" , "ls -a1", etc.
+This program has a few bugs. It is not working when you input multiple commands. 
+Rshell only works when you have one command with flags, e.g. "ls -a" , "ls -a1", etc.
+It does not work with && or || or ; connectors for the command line.
