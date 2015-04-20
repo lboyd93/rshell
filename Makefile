@@ -2,7 +2,8 @@
 opt := -Wall -Werror -ansi -pedantic
 comp := g++
 
-all: bin rshell
+all: rshell
 
 rshell:
-	$(comp) $(opt) ./src/main.cpp -o ./bin/rshell
+	mkdir bin
+	$(comp) $(opt) ./src/main.cpp -o /bin/rshell
