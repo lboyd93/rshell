@@ -10,9 +10,9 @@ using namespace std;
 
 int main(int argc, char* argv[]){
 	vector<string> dir_names;
-	int fileNumber = 1;
+	//int fileNumber = 1;
 	//set flag as you check which kind of argument is input
-	int flag=0;
+	//int flag=0;
 	//make first spot in dir_names '.'
 	dir_names.push_back(".");
 	
