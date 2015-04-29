@@ -14,16 +14,16 @@
 
 using namespace std;
 
-void ls_a(char* argv[]){
+void ls_a(const char* path){
 	DIR *dirp;
-	if(NULL == (dirp = opendir("."))){
+	if(NULL == (dirp = opendir(path))){
 		perror("There was an error with opendir().");
 		exit(1);
 	}
 	struct dirent *filespecs;
 	errno = 0;
 	while( (filespecs = readdir(dirp) ) != NULL){
-		cout << filespecs -> d_name << " " ;
+		cout << filespecs -> d_name << "  " ;
 	}
 	if(errno != 0){
 		perror("There was an error with readdir().");
@@ -34,6 +34,30 @@ void ls_a(char* argv[]){
 		perror("There was an error with closedir().");
 		exit(1);
 	}
+	return;
+}
+
+void ls_l(const char* name, struct stat s){
+	DIR *dirp;
+	if(NULL == (dirp = opendir(path))){
+		perror("There was an error with opendir().");
+		exit(1);
+	}
+	struct dirent *filespecs;
+	errno = 0;
+	while( (filespecs = readdir(dirp) ) != NULL){
+		cout << filespecs -> d_name << "  " ;
+	}
+	if(errno != 0){
+		perror("There was an error with readdir().");
+		exit(1);
+	}
+	cout << endl;
+	if(-1 == closedir(dirp)){
+		perror("There was an error with closedir().");
+		exit(1);
+	}
+	
 	return;
 }
 
@@ -62,41 +86,42 @@ void permission(const struct stat buf){
 int main(int argc, char* argv[]){
 	vector<char*> dir_names;
 	vector<char*> file_names;
-	
-	if(argc <= 1){
-		cout << "Nothing passed into argv." << endl;
-		exit(1);
-	}
+	struct stat s;
+	//char* path;
 	
 	//set flag as you check which kind of argument is input
 	int flag=0;
+	int numFile=1;
 	//make first spot in dir_names '.'
-	//dir_names.push_back(".");
+//	dir_names.push_back(".");
 	
 	//check if the arguments are flags or filenames
 	
 	for(int pos=1; pos<argc; pos++){
 		if(!strcmp(argv[pos],"-a")){
 			flag = flag | 0x01;
-			ls_a(argv);
-			
+			if(argc <=2)
+				ls_a(".");
+		//	ls_a(path);
 		}
 		else if(!strcmp(argv[pos], "-l")){ 
 			flag = flag | 0x02;
+			if(argc < = 2)
+				ls_l(".", s);
 		}
 		else if(!strcmp(argv[pos], "-R")){
 			flag = flag | 0x04;
 		}
+		else{
+			if(numFile == 1){
+				string dir_name = argv[pos];
+				//dir_names[0] = dir_name;
+				numFile++;
+			}
+			else{ dir_names.push_back(argv[pos]); }
+		}
 	}
 	//cout << flag << endl;	
-	
-	
-	
-	struct stat s;
-	
-	stat(".",&s);
-	
-	permission(s);
 	
 	return 0;
 }
