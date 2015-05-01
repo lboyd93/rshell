@@ -18,8 +18,10 @@ using namespace std;
 #define FLAG_l 2
 #define FLAG_R 4 
 
-void permission(const struct stat buf, dirent *dirp);
+void permission(int &total,const struct stat buf);
 string addC_str(const char *name, char d_name[]);
+void getTotal(int &total, struct stat buf, dirent *dirp);
+void printInfo(int &total, struct stat buf, dirent *dirp);
 
 //function for ls and ls -a 
 void ls(const char* path, bool isA){
@@ -61,26 +63,35 @@ void ls_l(const char* dir, bool isA, bool isR){
 		perror("There was an error with opendir().");
 		exit(1);
 	}
-	struct dirent *filespecs;
+	struct dirent *filespecs1;
+	struct dirent *filespecs2;
 	struct stat s;
-	//stat(dir, &s);
+//	stat(dir, &s);
 	errno = 0;
-	while( (filespecs = readdir(dirp) ) != NULL){
+	int total=0;
+	while(  (filespecs1=readdir(dirp)) != NULL){
+		stat(dir, &s);
+		getTotal(total, s, filespecs1);
+	}
+	cout << "Total: " << total/2 << endl;
+	while( (filespecs2 = readdir(dirp) ) != NULL){
 		stat(dir, &s);
 		if(isA){
-			permission(s, filespecs);	
+			//cout << "Total: " << total/2 << endl;
+			printInfo(total,s,filespecs2);
 		}
 		else if(isR){
 			
-			
+		//TO DO	
 			
 	
 		}
 		else{
-			if (strcmp(filespecs->d_name, ".")!=0 
-				&& strcmp(filespecs->d_name, "..")!=0 
-				&& strcmp(filespecs->d_name, ".git") != 0){
-				permission(s, filespecs);
+			if (strcmp(filespecs2->d_name, ".")!=0 
+				&& strcmp(filespecs2->d_name, "..")!=0 
+				&& strcmp(filespecs2->d_name, ".git") != 0){
+				//cout << "Total: " << total/2 << endl;
+				printInfo(total,s, filespecs2);
 			}
 		}	
 	}
@@ -106,7 +117,6 @@ void ls_R(const char* dir){
 	}
 	struct dirent *filespecs;
 	errno = 0;
-	
 	while( (filespecs=readdir(dirp)) != NULL){
 		if(filespecs-> d_name[0] != '.'){
 			string path;
@@ -137,45 +147,38 @@ void ls_R(const char* dir){
 	return;
 }
 
-//try to get print info function working so I can delete other functions
-void printDir(const char *dir){
-	DIR *dirp;
-	if(NULL == (dirp = opendir(dir))){
-		perror("There was an error with opendir().");
-		exit(1);
-	}
-	struct dirent *filespecs;
-	struct stat s;
-	//stat(dir, &s);
-	errno = 0;
-	while( (filespecs = readdir(dirp) ) != NULL){
-		if (strcmp(filespecs->d_name, ".")!=0 && strcmp(filespecs->d_name, "..")!=0 
-			&& strcmp(filespecs->d_name, ".git") != 0){
-		stat(dir, &s);
-		permission(s, filespecs);
-		}
-	}
-	if(errno != 0){
-		perror("There was an error with readdir().");
-		exit(1);
-	}
-	cout << endl;
-	if(-1 == closedir(dirp)){
-		perror("There was an error with closedir().");
-		exit(1);
-	}
+void printInfo(int &total, struct stat buf, dirent *dirp){
+	stat(dirp->d_name, &buf);
 	
+	//create a struct with for the time
+	struct tm* timeinfo;
+	timeinfo = localtime( &buf.st_mtime);
+	char buffer[20];
+	strftime(buffer, 20, "%b %d %H:%M", timeinfo);
+	
+	struct passwd *pw;
+	if(!(pw = getpwuid(buf.st_uid)))
+		perror("there was an error with getpwuid");
+	struct group *gp;
+	if(!(gp= getgrgid(buf.st_gid)))
+		perror("there was an error with getgrgid");
+	
+	permission(total, buf);
+	
+	cout << " " << buf.st_nlink << " ";
+	cout << pw-> pw_name << " ";
+	cout << gp -> gr_name << " ";
+	cout << buf.st_size << " " << buffer << " " << dirp->d_name << endl;
+}
+
+void getTotal(int &total, struct stat buf, dirent *dirp){
+	total += buf.st_blocks;
 	return;
 
 }
 
 //permissions to be outputted by -l
-void permission(const struct stat buf, dirent *dirp){
-	//create a struct with for the time
-	struct tm* file_t;
-	file_t = localtime( &buf.st_mtime);
-	char buffer[100];
-	strftime(buffer, 100, "%h %e %R", file_t);
+void permission(int &total,struct stat buf){
 	
 	//output all stat
 	(buf.st_mode & S_IFDIR)? cout << "d":
@@ -197,11 +200,7 @@ void permission(const struct stat buf, dirent *dirp){
 	(buf.st_mode & S_IWOTH)? cout << "w": cout << "-";
 	(buf.st_mode & S_IXOTH)? cout << "x": cout << "-";
 	cout << " ";
-	
-	cout << " " << buf.st_nlink << " ";
-	cout << getpwuid(buf.st_uid)-> pw_name << " ";
-	cout << getgrgid(buf.st_gid) -> gr_name << " ";
-	cout << buf.st_size << " " << buffer << " " << dirp->d_name << endl;
+	total += buf.st_blocks;	
 }
 
 int main(int argc, char* argv[]){
