@@ -21,8 +21,8 @@ using namespace std;
 void permission(const struct stat buf, dirent *dirp);
 string addC_str(const char *name, char d_name[]);
 
-//function for ls -a
-void ls_a(const char* path){
+//function for ls and ls -a 
+void ls(const char* path, bool isA){
 	DIR *dirp;
 	if(NULL == (dirp = opendir(path))){
 		perror("There was an error with opendir().");
@@ -31,33 +31,15 @@ void ls_a(const char* path){
 	struct dirent *filespecs;
 	errno = 0;
 	while( (filespecs = readdir(dirp) ) != NULL){
-		cout << filespecs -> d_name << "  " ;
-	}
-	if(errno != 0){
-		perror("There was an error with readdir().");
-		exit(1);
-	}
-	cout << endl;
-	if(-1 == closedir(dirp)){
-		perror("There was an error with closedir().");
-		exit(1);
-	}
-	return;
-}
-
-//function for ls by itself
-void ls(const char* path){
-	DIR *dirp;
-	if(NULL == (dirp = opendir(path))){
-		perror("There was an error with opendir().");
-		exit(1);
-	}
-	struct dirent *filespecs;
-	errno = 0;
-	while( (filespecs = readdir(dirp) ) != NULL){
-		if (strcmp(filespecs->d_name, ".")!=0 && strcmp(filespecs->d_name, "..")!=0 
+		if(isA){
+			cout << filespecs->d_name << "  ";
+		}
+		else{
+			 if (strcmp(filespecs->d_name, ".")!=0 
+			&& strcmp(filespecs->d_name, "..")!=0 
 			&& strcmp(filespecs->d_name, ".git") != 0){
 			cout << filespecs -> d_name << "  " ;
+			}
 		}
 	}
 	if(errno != 0){
@@ -73,7 +55,7 @@ void ls(const char* path){
 }
 
 //function for ls -l and also when ls -a -l is called
-void ls_l(const char* dir, bool isA){
+void ls_l(const char* dir, bool isA, bool isR){
 	DIR *dirp;
 	if(NULL == (dirp = opendir(dir))){
 		perror("There was an error with opendir().");
@@ -87,6 +69,12 @@ void ls_l(const char* dir, bool isA){
 		stat(dir, &s);
 		if(isA){
 			permission(s, filespecs);	
+		}
+		else if(isR){
+			
+			
+			
+	
 		}
 		else{
 			if (strcmp(filespecs->d_name, ".")!=0 
@@ -271,19 +259,19 @@ int main(int argc, char* argv[]){
 	cout << "Outputting argv: ";
 	for(unsigned i=0; argv[i] != '\0'; i++)
 		cout <<  argv[i] << " ";
+	cout << endl;
 	
 	for(unsigned int i=0; i < dir_names.size(); i++)
 		cout << "Here is directory names: " <<  dir_names[0] << endl;
 	//cout << flag << endl;	
 	
 	if(argc == 1)
-		ls(".");
+		ls(".", isA);
 	
-	if(isA)
-		ls_a(".");
+	if(isA) ls(".", isA);
 	
 	if(isL)
-		ls_l(".", isA);
+		ls_l(".", isA, isR);
 	if(isR)
 		ls_R(".");
 		
