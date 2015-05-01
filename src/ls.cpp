@@ -21,6 +21,7 @@ using namespace std;
 void permission(const struct stat buf, dirent *dirp);
 string addC_str(const char *name, char d_name[]);
 
+//function for ls -a
 void ls_a(const char* path){
 	DIR *dirp;
 	if(NULL == (dirp = opendir(path))){
@@ -44,6 +45,7 @@ void ls_a(const char* path){
 	return;
 }
 
+//function for ls by itself
 void ls(const char* path){
 	DIR *dirp;
 	if(NULL == (dirp = opendir(path))){
@@ -70,7 +72,8 @@ void ls(const char* path){
 	return;
 }
 
-void ls_l(const char* dir){
+//function for ls -l and also when ls -a -l is called
+void ls_l(const char* dir, bool isA){
 	DIR *dirp;
 	if(NULL == (dirp = opendir(dir))){
 		perror("There was an error with opendir().");
@@ -81,11 +84,17 @@ void ls_l(const char* dir){
 	//stat(dir, &s);
 	errno = 0;
 	while( (filespecs = readdir(dirp) ) != NULL){
-		if (strcmp(filespecs->d_name, ".")!=0 && strcmp(filespecs->d_name, "..")!=0 
-			&& strcmp(filespecs->d_name, ".git") != 0){
 		stat(dir, &s);
-		permission(s, filespecs);
+		if(isA){
+			permission(s, filespecs);	
 		}
+		else{
+			if (strcmp(filespecs->d_name, ".")!=0 
+				&& strcmp(filespecs->d_name, "..")!=0 
+				&& strcmp(filespecs->d_name, ".git") != 0){
+				permission(s, filespecs);
+			}
+		}	
 	}
 	if(errno != 0){
 		perror("There was an error with readdir().");
@@ -100,6 +109,7 @@ void ls_l(const char* dir){
 	return;
 }
 
+//function for -R
 void ls_R(const char* dir){
 	DIR *dirp;
 	if(NULL == (dirp = opendir(dir))){
@@ -139,6 +149,7 @@ void ls_R(const char* dir){
 	return;
 }
 
+//try to get print info function working so I can delete other functions
 void printDir(const char *dir){
 	DIR *dirp;
 	if(NULL == (dirp = opendir(dir))){
@@ -168,17 +179,17 @@ void printDir(const char *dir){
 	
 	return;
 
-	
-	
-	
 }
 
+//permissions to be outputted by -l
 void permission(const struct stat buf, dirent *dirp){
+	//create a struct with for the time
 	struct tm* file_t;
 	file_t = localtime( &buf.st_mtime);
 	char buffer[100];
 	strftime(buffer, 100, "%h %e %R", file_t);
 	
+	//output all stat
 	(buf.st_mode & S_IFDIR)? cout << "d":
 	(buf.st_mode & S_IFCHR) ? cout<< 'c':
 	(buf.st_mode & S_IFBLK) ? cout<< 'b':
@@ -206,12 +217,16 @@ void permission(const struct stat buf, dirent *dirp){
 }
 
 int main(int argc, char* argv[]){
+	//make a vector for the directory names and filenames inputted
+	//into command line
 	vector<char*> dir_names;
 	vector<char*> file_names;
 	//char* path;
 	
+	//set flags
 	int flags=0;
-	int numFile=1;	
+	int numFile=1;
+	//booleans to keep track of which flags are called	
 	bool isA=false;
 	bool isL=false;
 	bool isR=false;
@@ -231,6 +246,18 @@ int main(int argc, char* argv[]){
 			isR=true;
 			flags = flags | FLAG_R;
 		}
+		else if(!strcmp(argv[pos],"-al") || !strcmp(argv[pos],"-la")){
+			isA=true;
+			isL=true;
+			flags= flags | FLAG_a && FLAG_l;
+			//ls_a(path);
+		}
+		else if(!strcmp(argv[pos],"-aR") || !strcmp(argv[pos],"-Ra")){
+			isA=true;
+			flags= flags | FLAG_a;
+			//ls_a(path);
+		}
+		//if it is a file or directory
 		else{
 			if(numFile == 1){
 				char *dir_name = argv[pos];
@@ -241,9 +268,9 @@ int main(int argc, char* argv[]){
 		}
 	}
 	
-
+	cout << "Outputting argv: ";
 	for(unsigned i=0; argv[i] != '\0'; i++)
-		cout << "Outputting argv " <<  argv[i] << endl;
+		cout <<  argv[i] << " ";
 	
 	for(unsigned int i=0; i < dir_names.size(); i++)
 		cout << "Here is directory names: " <<  dir_names[0] << endl;
@@ -256,13 +283,14 @@ int main(int argc, char* argv[]){
 		ls_a(".");
 	
 	if(isL)
-		ls_l(".");
+		ls_l(".", isA);
 	if(isR)
 		ls_R(".");
 		
 	return 0;
 }
 
+//function to add path names together
 string addC_str(const char *name, char d_name[]){
 	return string(name) + "/" + string(d_name);
 }
