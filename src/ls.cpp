@@ -14,6 +14,10 @@
 
 using namespace std;
 
+#define FLAG_a 1
+#define FLAG_l 2
+#define FLAG_R 4 
+
 void permission(const struct stat buf, dirent *dirp);
 string addC_str(const char *name, char d_name[]);
 
@@ -135,6 +139,39 @@ void ls_R(const char* dir){
 	return;
 }
 
+void printDir(const char *dir){
+	DIR *dirp;
+	if(NULL == (dirp = opendir(dir))){
+		perror("There was an error with opendir().");
+		exit(1);
+	}
+	struct dirent *filespecs;
+	struct stat s;
+	//stat(dir, &s);
+	errno = 0;
+	while( (filespecs = readdir(dirp) ) != NULL){
+		if (strcmp(filespecs->d_name, ".")!=0 && strcmp(filespecs->d_name, "..")!=0 
+			&& strcmp(filespecs->d_name, ".git") != 0){
+		stat(dir, &s);
+		permission(s, filespecs);
+		}
+	}
+	if(errno != 0){
+		perror("There was an error with readdir().");
+		exit(1);
+	}
+	cout << endl;
+	if(-1 == closedir(dirp)){
+		perror("There was an error with closedir().");
+		exit(1);
+	}
+	
+	return;
+
+	
+	
+	
+}
 
 void permission(const struct stat buf, dirent *dirp){
 	struct tm* file_t;
@@ -173,6 +210,7 @@ int main(int argc, char* argv[]){
 	vector<char*> file_names;
 	//char* path;
 	
+	int flags=0;
 	int numFile=1;	
 	bool isA=false;
 	bool isL=false;
@@ -182,14 +220,16 @@ int main(int argc, char* argv[]){
 	for(int pos=1; pos<argc; pos++){
 		if(!strcmp(argv[pos],"-a")){
 			isA=true;
+			flags= flags | FLAG_a;
 			//ls_a(path);
 		}
 		else if(!strcmp(argv[pos], "-l")){ 
 			isL=true;
+			flags = flags | FLAG_l;
 		}
 		else if(!strcmp(argv[pos], "-R")){
 			isR=true;
-			
+			flags = flags | FLAG_R;
 		}
 		else{
 			if(numFile == 1){
@@ -200,6 +240,10 @@ int main(int argc, char* argv[]){
 			else{ dir_names.push_back(argv[pos]); }
 		}
 	}
+	
+
+	for(unsigned i=0; argv[i] != '\0'; i++)
+		cout << "Outputting argv " <<  argv[i] << endl;
 	
 	for(unsigned int i=0; i < dir_names.size(); i++)
 		cout << "Here is directory names: " <<  dir_names[0] << endl;
