@@ -15,6 +15,8 @@
 using namespace std;
 
 void permission(const struct stat buf, dirent *dirp);
+string addC_str(const char *name, char d_name[]);
+
 void ls_a(const char* path){
 	DIR *dirp;
 	if(NULL == (dirp = opendir(path))){
@@ -25,6 +27,32 @@ void ls_a(const char* path){
 	errno = 0;
 	while( (filespecs = readdir(dirp) ) != NULL){
 		cout << filespecs -> d_name << "  " ;
+	}
+	if(errno != 0){
+		perror("There was an error with readdir().");
+		exit(1);
+	}
+	cout << endl;
+	if(-1 == closedir(dirp)){
+		perror("There was an error with closedir().");
+		exit(1);
+	}
+	return;
+}
+
+void ls(const char* path){
+	DIR *dirp;
+	if(NULL == (dirp = opendir(path))){
+		perror("There was an error with opendir().");
+		exit(1);
+	}
+	struct dirent *filespecs;
+	errno = 0;
+	while( (filespecs = readdir(dirp) ) != NULL){
+		if (strcmp(filespecs->d_name, ".")!=0 && strcmp(filespecs->d_name, "..")!=0 
+			&& strcmp(filespecs->d_name, ".git") != 0){
+			cout << filespecs -> d_name << "  " ;
+		}
 	}
 	if(errno != 0){
 		perror("There was an error with readdir().");
@@ -49,9 +77,11 @@ void ls_l(const char* dir){
 	//stat(dir, &s);
 	errno = 0;
 	while( (filespecs = readdir(dirp) ) != NULL){
+		if (strcmp(filespecs->d_name, ".")!=0 && strcmp(filespecs->d_name, "..")!=0 
+			&& strcmp(filespecs->d_name, ".git") != 0){
 		stat(dir, &s);
 		permission(s, filespecs);
-		//cout << endl;
+		}
 	}
 	if(errno != 0){
 		perror("There was an error with readdir().");
@@ -65,6 +95,46 @@ void ls_l(const char* dir){
 	
 	return;
 }
+
+void ls_R(const char* dir){
+	DIR *dirp;
+	if(NULL == (dirp = opendir(dir))){
+		perror("There was an error with opendir().");
+		exit(1);
+	}
+	struct dirent *filespecs;
+	errno = 0;
+	
+	while( (filespecs=readdir(dirp)) != NULL){
+		if(filespecs-> d_name[0] != '.'){
+			string path;
+			path += addC_str(dir, filespecs->d_name);
+			
+			cout << filespecs->d_name << ":" <<  endl; 
+				
+			if(filespecs-> d_type == DT_DIR)
+				ls_R(path.c_str());
+			
+		}
+		else{
+			cout << filespecs->d_name << endl;
+			
+		}
+	
+	}
+	if(errno != 0){
+		perror("There was an error with readdir().");
+		exit(1);
+	}
+	cout << endl;
+	if(-1 == closedir(dirp)){
+		perror("There was an error with closedir().");
+		exit(1);
+	}
+
+	return;
+}
+
 
 void permission(const struct stat buf, dirent *dirp){
 	struct tm* file_t;
@@ -103,39 +173,52 @@ int main(int argc, char* argv[]){
 	vector<char*> file_names;
 	//char* path;
 	
-	//set flag as you check which kind of argument is input
-	int flag=0;
-	int numFile=1;
-	//make first spot in dir_names '.'
-//	dir_names.push_back(".");
+	int numFile=1;	
+	bool isA=false;
+	bool isL=false;
+	bool isR=false;
 	
 	//check if the arguments are flags or filenames
-	
 	for(int pos=1; pos<argc; pos++){
 		if(!strcmp(argv[pos],"-a")){
-			flag = flag | 0x01;
-			if(argc <=2)
-				ls_a(".");
-		//	ls_a(path);
+			isA=true;
+			//ls_a(path);
 		}
 		else if(!strcmp(argv[pos], "-l")){ 
-			flag = flag | 0x02;
-			if(argc <= 2)
-				ls_l(".");
+			isL=true;
 		}
 		else if(!strcmp(argv[pos], "-R")){
-			flag = flag | 0x04;
+			isR=true;
+			
 		}
 		else{
 			if(numFile == 1){
-				string dir_name = argv[pos];
-				//dir_names[0] = dir_name;
+				char *dir_name = argv[pos];
+				dir_names[0] = dir_name;
 				numFile++;
 			}
 			else{ dir_names.push_back(argv[pos]); }
 		}
 	}
+	
+	for(unsigned int i=0; i < dir_names.size(); i++)
+		cout << "Here is directory names: " <<  dir_names[0] << endl;
 	//cout << flag << endl;	
 	
+	if(argc == 1)
+		ls(".");
+	
+	if(isA)
+		ls_a(".");
+	
+	if(isL)
+		ls_l(".");
+	if(isR)
+		ls_R(".");
+		
 	return 0;
+}
+
+string addC_str(const char *name, char d_name[]){
+	return string(name) + "/" + string(d_name);
 }
