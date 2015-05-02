@@ -1,6 +1,8 @@
 #include <iostream>
+#include <cstring>
 #include <stdio.h>
 #include <vector>
+#include <algorithm>
 #include <string>
 #include <string.h>
 #include <sys/types.h>
@@ -64,7 +66,6 @@ void ls_l(const char* dir, bool isA, bool isR){
 		exit(1);
 	}
 	struct dirent *filespecs1;
-	struct dirent *filespecs2;
 	struct stat s;
 //	stat(dir, &s);
 	errno = 0;
@@ -73,7 +74,21 @@ void ls_l(const char* dir, bool isA, bool isR){
 		stat(dir, &s);
 		getTotal(total, s, filespecs1);
 	}
+	
+	if(-1 == closedir(dirp)){
+		perror("There was an error with closedir().");
+		exit(1);
+	}
+	
 	cout << "Total: " << total/2 << endl;
+	
+	if(NULL == (dirp = opendir(dir))){
+		perror("There was an error with opendir().");
+		exit(1);
+	}
+
+	struct dirent *filespecs2;
+		
 	while( (filespecs2 = readdir(dirp) ) != NULL){
 		stat(dir, &s);
 		if(isA){
@@ -116,6 +131,7 @@ void ls_R(const char* dir){
 		exit(1);
 	}
 	struct dirent *filespecs;
+	
 	errno = 0;
 	while( (filespecs=readdir(dirp)) != NULL){
 		if(filespecs-> d_name[0] != '.'){
@@ -185,8 +201,8 @@ void permission(int &total,struct stat buf){
 	(buf.st_mode & S_IFCHR) ? cout<< 'c':
 	(buf.st_mode & S_IFBLK) ? cout<< 'b':
 	(buf.st_mode & S_IFIFO) ? cout<< 'f':
-	(buf.st_mode & S_IFSOCK) ? cout<<'s':
-	(buf.st_mode & S_IFLNK) ? cout<< 'l':
+	(buf.st_mode & S_IFREG) ? cout<< '-':
+	
 	
 	(buf.st_mode & S_IRUSR)? cout << "r": cout << "-";
 	(buf.st_mode & S_IWUSR)? cout << "w": cout << "-";
@@ -200,7 +216,6 @@ void permission(int &total,struct stat buf){
 	(buf.st_mode & S_IWOTH)? cout << "w": cout << "-";
 	(buf.st_mode & S_IXOTH)? cout << "x": cout << "-";
 	cout << " ";
-	total += buf.st_blocks;	
 }
 
 int main(int argc, char* argv[]){
@@ -208,11 +223,14 @@ int main(int argc, char* argv[]){
 	//into command line
 	vector<char*> dir_names;
 	vector<char*> file_names;
+	vector<char*> others;
 	//char* path;
+	
+	//int numArgs=1;
 	
 	//set flags
 	int flags=0;
-	int numFile=1;
+	//int numFile=1;
 	//booleans to keep track of which flags are called	
 	bool isA=false;
 	bool isL=false;
@@ -246,15 +264,20 @@ int main(int argc, char* argv[]){
 		}
 		//if it is a file or directory
 		else{
-			if(numFile == 1){
-				char *dir_name = argv[pos];
-				dir_names[0] = dir_name;
-				numFile++;
-			}
-			else{ dir_names.push_back(argv[pos]); }
+			dir_names.push_back(argv[pos]); 
 		}
 	}
 	
+	
+	
+	//sorting directories
+	for(unsigned int i=0; i< dir_names.size(); i++)
+		sort(dir_names.begin(), dir_names.end());
+	//sorting files
+	for(unsigned int i=0; i< file_names.size(); i++)
+		sort(file_names.begin(), file_names.end());
+	
+
 	cout << "Outputting argv: ";
 	for(unsigned i=0; argv[i] != '\0'; i++)
 		cout <<  argv[i] << " ";
@@ -263,17 +286,22 @@ int main(int argc, char* argv[]){
 	for(unsigned int i=0; i < dir_names.size(); i++)
 		cout << "Here is directory names: " <<  dir_names[0] << endl;
 	//cout << flag << endl;	
-	
+		
 	if(argc == 1)
 		ls(".", isA);
 	
-	if(isA) ls(".", isA);
-	
-	if(isL)
-		ls_l(".", isA, isR);
-	if(isR)
-		ls_R(".");
+	for(unsigned int i =0; i < dir_names.size(); i++){
 		
+		if( !isA && !isL && !isR)
+			ls(dir_names[i], isA);
+		
+		if(isA) ls(dir_names[i], isA);
+	
+		if(isL)
+			ls_l(dir_names[i], isA, isR);
+		if(isR)
+			ls_R(dir_names[i]);
+	}
 	return 0;
 }
 
