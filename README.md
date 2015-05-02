@@ -40,8 +40,6 @@ This implementation of ls has a few known bugs.
 
 * Flags: "-Rl", "-R", are not working.
 
-* When outputting, it does not sort alphabetically.
-
 * When outputting, the colunms in -l do not match the column with the longest character count.
 
 * When outputting -l, my ls does not get the the reading permission of groups, users, or everyone.
