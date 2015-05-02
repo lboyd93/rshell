@@ -45,3 +45,5 @@ This implementation of ls has a few known bugs.
 * When outputting, the colunms in -l do not match the column with the longest character count.
 
 * When outputting -l, my ls does not get the the reading permission of groups, users, or everyone.
+
+* When outputting -a and -R together, it does not print out the "." files and their files as well. 
