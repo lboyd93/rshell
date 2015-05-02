@@ -123,7 +123,7 @@ void ls_l(const char* dir, bool isA, bool isR){
 	return;
 }
 
-void sortDir(const char* dir, vector<string> &dirlist){
+void sortDir(const char* dir, vector<string> &dirlist, bool isA){
 	DIR *dirp;
 	if(NULL == (dirp = opendir(dir))){
 		perror("There was an error with opendir().");
@@ -134,6 +134,10 @@ void sortDir(const char* dir, vector<string> &dirlist){
 	errno = 0;
 	int i = 0;
 	while( (filespecs1=readdir(dirp)) != NULL){
+		if(!isA){
+			if(!strcmp(filespecs1->d_name, ".") )
+				continue;
+		}
 		dirlist.push_back(filespecs1->d_name);
 		i++;
 	}
@@ -154,7 +158,7 @@ void sortDir(const char* dir, vector<string> &dirlist){
 }
 
 //function for -R
-void ls_R(const char* dir){
+void ls_R(const char* dir, bool isA, bool isL){
 	vector<string> dirlist;
 	DIR *dirp;
 	if(NULL == (dirp = opendir(dir))){
@@ -165,11 +169,30 @@ void ls_R(const char* dir){
 	
 	errno = 0;
 	
-	sortDir(dir, dirlist);
+	sortDir(dir, dirlist, isA);
 	
 	cout << dir << ":" << endl;
 	
-//	ls(dir, 0);
+	for(unsigned int i=0; i < dirlist.size(); i++)
+		cout << dirlist[i] << " ";
+	cout << endl << endl;
+
+	while( (filespecs=readdir(dirp)) != NULL){
+		if(filespecs-> d_name[0] != '.'){
+			string path;
+			path += addC_str(dir, filespecs->d_name);
+				
+			if(filespecs-> d_type == DT_DIR)
+				ls_R(path.c_str(), 1, 0);
+		}
+	}
+/*	if (strcmp(filespecs->d_name, ".")!=0 
+			&& strcmp(filespecs->d_name, "..")!=0 
+			&& strcmp(filespecs->d_name, ".git") != 0){	
+		filespecs=filespecs->filespecs;
+	}	
+	cout << dir << ":" << endl;
+		
 	for(unsigned int i=0; i < dirlist.size(); i++)
 		cout << dirlist[i] << " ";
 	cout << endl << endl;
@@ -178,12 +201,12 @@ void ls_R(const char* dir){
 		if(filespecs-> d_name[0] != '.'){
 			string path;
 			path += addC_str(dir, filespecs->d_name);
-			
 			if(filespecs-> d_type == DT_DIR)
-				ls_R(path.c_str());
-			
+				ls_R(path.c_str(), 0, 0);
 		}
-	}
+	}*/
+	
+	
 	if(errno != 0){
 		perror("There was an error with readdir().");
 		exit(1);
@@ -314,12 +337,16 @@ int main(int argc, char* argv[]){
 		if( !isA && !isL && !isR)
 			ls(dir_names[i], isA);
 		
-		if(isA) ls(dir_names[i], isA);
+		if(isA && !isR) ls(dir_names[i], isA);
 	
 		if(isL)
 			ls_l(dir_names[i], isA, isR);
-		if(isR)
-			ls_R(dir_names[i]);
+		if(isR && !isA && !isL)
+			ls_R(dir_names[i], 0, 0);
+		if(isR && isA && !isL)
+			ls_R(dir_names[i], 1, 0);
+		if(isR && isA && isL)
+			ls_R(dir_names[i], 1, 1);
 	}
 	return 0;
 }
