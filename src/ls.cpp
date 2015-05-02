@@ -123,8 +123,39 @@ void ls_l(const char* dir, bool isA, bool isR){
 	return;
 }
 
+void sortDir(const char* dir, vector<string> &dirlist){
+	DIR *dirp;
+	if(NULL == (dirp = opendir(dir))){
+		perror("There was an error with opendir().");
+		exit(1);
+	}
+	struct dirent *filespecs1;
+	
+	errno = 0;
+	int i = 0;
+	while( (filespecs1=readdir(dirp)) != NULL){
+		dirlist.push_back(filespecs1->d_name);
+		i++;
+	}
+	
+	sort(dirlist.begin(), dirlist.end());
+		
+	if(errno != 0){
+		perror("There was an error with readdir().");
+		exit(1);
+	}
+	
+	if(-1 == closedir(dirp)){
+		perror("There was an error with closedir().");
+		exit(1);
+	}
+	
+	return;
+}
+
 //function for -R
 void ls_R(const char* dir){
+	vector<string> dirlist;
 	DIR *dirp;
 	if(NULL == (dirp = opendir(dir))){
 		perror("There was an error with opendir().");
@@ -133,22 +164,25 @@ void ls_R(const char* dir){
 	struct dirent *filespecs;
 	
 	errno = 0;
+	
+	sortDir(dir, dirlist);
+	
+	cout << dir << ":" << endl;
+	
+//	ls(dir, 0);
+	for(unsigned int i=0; i < dirlist.size(); i++)
+		cout << dirlist[i] << " ";
+	cout << endl << endl;
+	
 	while( (filespecs=readdir(dirp)) != NULL){
 		if(filespecs-> d_name[0] != '.'){
 			string path;
 			path += addC_str(dir, filespecs->d_name);
 			
-			cout << filespecs->d_name << ":" <<  endl; 
-				
 			if(filespecs-> d_type == DT_DIR)
 				ls_R(path.c_str());
 			
 		}
-		else{
-			cout << filespecs->d_name << endl;
-			
-		}
-	
 	}
 	if(errno != 0){
 		perror("There was an error with readdir().");
@@ -240,21 +274,21 @@ int main(int argc, char* argv[]){
 	for(int pos=1; pos<argc; pos++){
 		if(!strcmp(argv[pos],"-a")){
 			isA=true;
-			flags= flags | FLAG_a;
+			//flags= flags | FLAG_a;
 			//ls_a(path);
 		}
 		else if(!strcmp(argv[pos], "-l")){ 
 			isL=true;
-			flags = flags | FLAG_l;
+			//flags = flags | FLAG_l;
 		}
 		else if(!strcmp(argv[pos], "-R")){
 			isR=true;
-			flags = flags | FLAG_R;
+			//flags = flags | FLAG_R;
 		}
 		else if(!strcmp(argv[pos],"-al") || !strcmp(argv[pos],"-la")){
 			isA=true;
 			isL=true;
-			flags= flags | FLAG_a && FLAG_l;
+			//flags= flags | FLAG_a && FLAG_l;
 			//ls_a(path);
 		}
 		else if(!strcmp(argv[pos],"-aR") || !strcmp(argv[pos],"-Ra")){
@@ -268,28 +302,13 @@ int main(int argc, char* argv[]){
 		}
 	}
 	
-	
-	
 	//sorting directories
 	for(unsigned int i=0; i< dir_names.size(); i++)
 		sort(dir_names.begin(), dir_names.end());
-	//sorting files
-	for(unsigned int i=0; i< file_names.size(); i++)
-		sort(file_names.begin(), file_names.end());
 	
-
-	cout << "Outputting argv: ";
-	for(unsigned i=0; argv[i] != '\0'; i++)
-		cout <<  argv[i] << " ";
-	cout << endl;
 	
-	for(unsigned int i=0; i < dir_names.size(); i++)
-		cout << "Here is directory names: " <<  dir_names[0] << endl;
-	//cout << flag << endl;	
-		
 	if(argc == 1)
 		ls(".", isA);
-	
 	for(unsigned int i =0; i < dir_names.size(); i++){
 		
 		if( !isA && !isL && !isR)
