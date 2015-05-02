@@ -39,3 +39,9 @@ This implementation of ls has a few known bugs.
 * When you want to use ls on a file, you get an error that you cannot open a directory.
 
 * Flags: "-Rl", "-R", are not working.
+
+* When outputting, it does not sort alphabetically.
+
+* When outputting, the colunms in -l do not match the column with the longest character count.
+
+* When outputting -l, my ls does not get the the reading permission of groups, users, or everyone.
