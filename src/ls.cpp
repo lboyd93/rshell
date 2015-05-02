@@ -123,6 +123,12 @@ void ls_l(const char* dir, bool isA, bool isR){
 	return;
 }
 
+
+bool compareNoCase( const string& s1, const string& s2 ) {
+    return strcasecmp( s1.c_str(), s2.c_str() ) <= 0;
+}
+	
+
 void sortDir(const char* dir, vector<string> &dirlist, bool isA){
 	DIR *dirp;
 	if(NULL == (dirp = opendir(dir))){
@@ -134,15 +140,12 @@ void sortDir(const char* dir, vector<string> &dirlist, bool isA){
 	errno = 0;
 	int i = 0;
 	while( (filespecs1=readdir(dirp)) != NULL){
-		if(!isA){
-			if(!strcmp(filespecs1->d_name, ".") )
-				continue;
-		}
+		if(filespecs1->d_name[0] == '.' && !isA) continue;
 		dirlist.push_back(filespecs1->d_name);
 		i++;
 	}
 	
-	sort(dirlist.begin(), dirlist.end());
+	sort(dirlist.begin(), dirlist.end(), compareNoCase);
 		
 	if(errno != 0){
 		perror("There was an error with readdir().");
@@ -286,8 +289,6 @@ int main(int argc, char* argv[]){
 	//int numArgs=1;
 	
 	//set flags
-	int flags=0;
-	//int numFile=1;
 	//booleans to keep track of which flags are called	
 	bool isA=false;
 	bool isL=false;
@@ -316,8 +317,14 @@ int main(int argc, char* argv[]){
 		}
 		else if(!strcmp(argv[pos],"-aR") || !strcmp(argv[pos],"-Ra")){
 			isA=true;
-			flags= flags | FLAG_a;
-			//ls_a(path);
+			isR=true;
+		}
+		else if(!strcmp(argv[pos],"-aRl") || !strcmp(argv[pos],"-Ral") 
+			|| !strcmp(argv[pos],"-alR") || !strcmp(argv[pos],"-lRa")
+				|| !strcmp(argv[pos],"-laR") || !strcmp(argv[pos],"-Rla")){
+			isA=true;
+			isR=true;
+			isL=true;
 		}
 		//if it is a file or directory
 		else{
@@ -327,11 +334,25 @@ int main(int argc, char* argv[]){
 	
 	//sorting directories
 	for(unsigned int i=0; i< dir_names.size(); i++)
-		sort(dir_names.begin(), dir_names.end());
+		sort(dir_names.begin(), dir_names.end(), compareNoCase);
 	
 	
-	if(argc == 1)
-		ls(".", isA);
+	if(dir_names.size()== 0){
+		if( !isA && !isL && !isR)
+			ls(".", 0);
+		
+		if(isA && !isR) ls(".", isA);
+	
+		if(isL)
+			ls_l(".", isA, isR);
+		if(isR && !isA && !isL)
+			ls_R(".", 0, 0);
+		if(isR && isA && !isL)
+			ls_R(".", 1, 0);
+		if(isR && isA && isL)
+			ls_R(".", 1, 1);
+	}
+		
 	for(unsigned int i =0; i < dir_names.size(); i++){
 		
 		if( !isA && !isL && !isR)
