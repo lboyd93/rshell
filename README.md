@@ -44,4 +44,6 @@ This implementation of ls has a few known bugs.
 
 * When outputting -l, my ls does not get the the reading permission of groups, users, or everyone.
 
-* When outputting -a and -R together, it does not print out the "." files and their files as well. 
+* When outputting -a and -R together, it does not print out the "." files and their files as well.
+
+* When you output -a with multiple directories, it does not output the name of the root before printing out all the file names. 

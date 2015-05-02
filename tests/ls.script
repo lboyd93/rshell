@@ -1,0 +1,534 @@
+Script started on Fri 01 May 2015 11:37:03 PM PDT
+~
+lboyd002@well $ r[Kcd rh[Kshelle[K
+~/rshell
+lboyd002@well $ v[Kbin/ls
+LICENSE  README.md  Makefile  bin  src  tests  
+~/rshell
+lboyd002@well $ bin/ls -a
+.  ..  .git  LICENSE  README.md  Makefile  bin  src  tests  
+~/rshell
+lboyd002@well $ bin/ls -al[K[Kl
+Total: 36
+-rw-------  1 lboyd002 classes 1476 Apr 13 19:50 LICENSE  
+-rw-------  1 lboyd002 classes 1890 May 01 21:52 README.md  
+-rw-------  1 lboyd002 classes 302 Apr 29 22:00 Makefile  
+drwx------  2 lboyd002 classes 4096 May 01 23:36 [38;5;32mbin[0;00m/  
+drwx------  2 lboyd002 classes 4096 May 01 23:36 [38;5;32msrc[0;00m/  
+drwx------  2 lboyd002 classes 4096 May 01 23:37 [38;5;32mtests[0;00m/  
+
+~/rshell
+lboyd002@well $ bin/ls -l[KR
+.:
+bin LICENSE Makefile README.md src tests 
+
+./bin:
+. .. ls rshell 
+
+
+./src:
+. .. cp.cpp ls.cpp rshell.cpp Timer.h 
+
+
+./tests:
+. .. exec.script ls.script 
+
+
+
+~/rshell
+lboyd002@well $ bin/ls -R[Kal
+Total: 36
+drwx------  6 lboyd002 classes 4096 May 01 21:52 [47m[38;5;32m.[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [47m[38;5;32m..[0;00m/  
+drwx------  8 lboyd002 classes 4096 May 01 21:42 [47m[38;5;32m.git[0;00m/  
+-rw-------  1 lboyd002 classes 1476 Apr 13 19:50 LICENSE  
+-rw-------  1 lboyd002 classes 1890 May 01 21:52 README.md  
+-rw-------  1 lboyd002 classes 302 Apr 29 22:00 Makefile  
+drwx------  2 lboyd002 classes 4096 May 01 23:36 [38;5;32mbin[0;00m/  
+drwx------  2 lboyd002 classes 4096 May 01 23:36 [38;5;32msrc[0;00m/  
+drwx------  2 lboyd002 classes 4096 May 01 23:37 [38;5;32mtests[0;00m/  
+
+~/rshell
+lboyd002@well $ bin/ls -al[K[Kla
+Total: 36
+drwx------  6 lboyd002 classes 4096 May 01 21:52 [47m[38;5;32m.[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [47m[38;5;32m..[0;00m/  
+drwx------  8 lboyd002 classes 4096 May 01 21:42 [47m[38;5;32m.git[0;00m/  
+-rw-------  1 lboyd002 classes 1476 Apr 13 19:50 LICENSE  
+-rw-------  1 lboyd002 classes 1890 May 01 21:52 README.md  
+-rw-------  1 lboyd002 classes 302 Apr 29 22:00 Makefile  
+drwx------  2 lboyd002 classes 4096 May 01 23:36 [38;5;32mbin[0;00m/  
+drwx------  2 lboyd002 classes 4096 May 01 23:36 [38;5;32msrc[0;00m/  
+drwx------  2 lboyd002 classes 4096 May 01 23:37 [38;5;32mtests[0;00m/  
+
+~/rshell
+lboyd002@well $ bin/ls -la[K[Ka -l
+Total: 36
+drwx------  6 lboyd002 classes 4096 May 01 21:52 [47m[38;5;32m.[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [47m[38;5;32m..[0;00m/  
+drwx------  8 lboyd002 classes 4096 May 01 21:42 [47m[38;5;32m.git[0;00m/  
+-rw-------  1 lboyd002 classes 1476 Apr 13 19:50 LICENSE  
+-rw-------  1 lboyd002 classes 1890 May 01 21:52 README.md  
+-rw-------  1 lboyd002 classes 302 Apr 29 22:00 Makefile  
+drwx------  2 lboyd002 classes 4096 May 01 23:36 [38;5;32mbin[0;00m/  
+drwx------  2 lboyd002 classes 4096 May 01 23:36 [38;5;32msrc[0;00m/  
+drwx------  2 lboyd002 classes 4096 May 01 23:37 [38;5;32mtests[0;00m/  
+
+~/rshell
+lboyd002@well $ bin/ls -a -l[C[C[C[2Plaa -l[Kbin/ls -a -l[2Plaal[1PRla[Kcd rshell[5Pexitbin/ls ../labs -a -l[Kl-al ../labs src tests[1P[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[6Pl ../labs srcR ../labs src tests[K[K[4hl[4la[C[C[C[C[C[C[C[C[1P ../labs-a[K[2PRa[Klaal[1Pla[Kcd rshell[5Pexitrm ls.script[4hscri[4lpt[C[C[C[C[C[C[C[C[C[C[4Prm[C[C[C[C[C[C[C[C[C[C[4hscri[4lpt[C[C[C[C[C[C[C[C[C[C[8Pcd testsls[Kbin/ls -a -aR[K-lR testslR[KaR-aR[Kbin/ls -Rlaal[6Pmakevim ./src/ls.cpp[6Pbin/ls -alvim ./src/ls.cppmake[Kbin/ls -al[6Pmakevim ./src/ls.cpp[6Pbin/ls -al[6Pmakevim ./src/ls.cpp[6Pbin/ls -al[6Pmakevim ./src/ls.cpp[6Pbin/ls -al[6Pmakevim ./src/ls.cpp[6Pbin/ls -al[6Pmakevim ./src/ls.cppmake[Kvim ./src/ls.cpp[6Pbin/ls -al[6Pmakevim ./src/ls.cppmake[Kvim ./src/ls.cpp[10Prshellvim ./src/ls.cpp[10Prshell[1Pcd ..[3Plsrm ls.scriptls[Krm ls.script[4hv[4li[C[C[C[C[C[C[C[C[C[C[Cls[Kscript ls.scriptls[Kcd testsls[Kbin/ls -l[5Pmakevim ./src/ls.cpp[7Pbin/ls -l[5Pmake[2Plscd rshellls[Kcs100[1Pexitbin/ls -la[Kala[K[5Pexitcs100[3Plscd rshellls[Kmakebin/ls -lvim ./src/ls.cppmake[Kbin/ls -lls[Kcd testsls[Kscript ls.scriptls[Kvim ls.script[1Pr[C[C[C[C[C[C[C[C[C[C[Cls[Krm ls.scriptls[Kcd ..rshellvim ./src/ls.cppmake[Kvim ./src/ls.cppmake[Kbin/ls -alvim ./src/ls.cppmake[Kvim ./src/ls.cppmake[Kbin/ls -alvim ./src/ls.cppmake[Kbin/ls -alvim ./src/ls.cppmake[Kbin/ls -alvim ./src/ls.cppmake[Kbin/ls -alvim ./src/ls.cppmake[Kbin/ls -alla[1PR[6P-aRbin/ls -aRlRaR tests[4P -l[K-Rals[Kcd testsscript ls.script[4Prm[C[C[C[C[C[C[C[C[C[C[4hscri[4lpt[C[C[C[C[C[C[C[C[C[C[4Prm[C[C[C[C[C[C[C[C[C[C[8Pexitcd rshell[3Pbin/ls -alalla[1PRal -a../labsa ../labs[1PR[C[C[C[C[C[C[C[C src tests[6Pl ../labs srca ../labs src tests[4hl[4l[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[10P../labs -al[K -l[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cexit[Kcd rshell[3Pbin/ls -alRallaa -l[Kbin [K/ls -l ../labs
+Total: 52
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab01[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab03[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab02[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab08[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab09[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab05[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab04[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab06[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab10[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab00[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab07[0;00m/  
+
+~/rshell
+lboyd002@well $ bin/ls -l ../labs[C[1P ../labsa ../labs
+.  ..  lab01  lab03  lab02  lab08  lab09  lab05  lab04  lab06  lab10  lab00  lab07  
+~/rshell
+lboyd002@well $ bin/ls -a ../labs[1P ../labs[1P ../labs[1P../labs
+lab01  lab03  lab02  lab08  lab09  lab05  lab04  lab06  lab10  lab00  lab07  
+~/rshell
+lboyd002@well $ bin/ls ../labs-a ../labs[C[Cl ../labs
+Total: 52
+drwx------  6 lboyd002 classes 4096 May 01 21:52 [47m[38;5;32m.[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [47m[38;5;32m..[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab01[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab03[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab02[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab08[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab09[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab05[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab04[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab06[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab10[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab00[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab07[0;00m/  
+
+~/rshell
+lboyd002@well $ bin/ls -al ../labs[1P ../labs[C[C[C[C[C[C[C[C -l
+Total: 52
+drwx------  6 lboyd002 classes 4096 May 01 21:52 [47m[38;5;32m.[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [47m[38;5;32m..[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab01[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab03[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab02[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab08[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab09[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab05[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab04[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab06[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab10[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab00[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab07[0;00m/  
+
+~/rshell
+lboyd002@well $ bin/ls -a ../labs -l[1P[4hR[4l[C[C[C[C[C[C[C[C[C[C[C[K[K[K
+../labs:
+lab00 lab01 lab02 lab03 lab04 lab05 lab06 lab07 lab08 lab09 lab10 
+
+../labs/lab01:
+. .. .lab a.out lab1.cpp lab1.out 
+
+
+../labs/lab03:
+. .. .lab 
+
+
+../labs/lab02:
+. .. .lab 
+
+
+../labs/lab08:
+. .. .lab 
+
+
+../labs/lab09:
+. .. .lab 
+
+
+../labs/lab05:
+. .. .lab 
+
+
+../labs/lab04:
+. .. .lab 
+
+
+../labs/lab06:
+. .. .lab 
+
+
+../labs/lab10:
+. .. .lab 
+
+
+../labs/lab00:
+. .. hello_world.cpp 
+
+
+../labs/lab07:
+. .. .lab 
+
+
+
+~/rshell
+lboyd002@well $ bin/ls -R ../labs[C[1P ../labs[1P ../labs[C[C[C[C[C[C[C[C -R
+../labs:
+lab00 lab01 lab02 lab03 lab04 lab05 lab06 lab07 lab08 lab09 lab10 
+
+../labs/lab01:
+. .. .lab a.out lab1.cpp lab1.out 
+
+
+../labs/lab03:
+. .. .lab 
+
+
+../labs/lab02:
+. .. .lab 
+
+
+../labs/lab08:
+. .. .lab 
+
+
+../labs/lab09:
+. .. .lab 
+
+
+../labs/lab05:
+. .. .lab 
+
+
+../labs/lab04:
+. .. .lab 
+
+
+../labs/lab06:
+. .. .lab 
+
+
+../labs/lab10:
+. .. .lab 
+
+
+../labs/lab00:
+. .. hello_world.cpp 
+
+
+../labs/lab07:
+. .. .lab 
+
+
+
+~/rshell
+lboyd002@well $ bin/ls  ../labs -R[K[K[K[K[K[K[K[K[K[K[K-R
+.:
+bin LICENSE Makefile README.md src tests 
+
+./bin:
+. .. ls rshell 
+
+
+./src:
+. .. cp.cpp ls.cpp rshell.cpp Timer.h 
+
+
+./tests:
+. .. exec.script ls.script 
+
+
+
+~/rshell
+lboyd002@well $ bin/ls -R[K[K./[K[K../labs src tests
+lab01  lab03  lab02  lab08  lab09  lab05  lab04  lab06  lab10  lab00  lab07  
+cp.cpp  Timer.h  rshell.cpp  ls.cpp  
+exec.script  ls.script  
+~/rshell
+lboyd002@well $ bin/ls ../labs src tests-R[K ../labs -R[1P-R ../labsa ../labs -l[K[Ksrc tests
+.  ..  lab01  lab03  lab02  lab08  lab09  lab05  lab04  lab06  lab10  lab00  lab07  
+.  ..  cp.cpp  Timer.h  rshell.cpp  ls.cpp  
+.  ..  exec.script  ls.script  
+~/rshell
+lboyd002@well $ bin/ls -a ../labs src tests[3P[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[4h-a [4l[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1P[4hl[4l
+Total: 52
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab01[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab03[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab02[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab08[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab09[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab05[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab04[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab06[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab10[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab00[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab07[0;00m/  
+
+Total: 24
+drwx------  2 lboyd002 classes 4096 May 01 23:36 [38;5;32mcp.cpp[0;00m/  
+drwx------  2 lboyd002 classes 4096 May 01 23:36 [38;5;32mTimer.h[0;00m/  
+drwx------  2 lboyd002 classes 4096 May 01 23:36 [38;5;32mrshell.cpp[0;00m/  
+drwx------  2 lboyd002 classes 4096 May 01 23:36 [38;5;32mls.cpp[0;00m/  
+
+Total: 16
+drwx------  2 lboyd002 classes 4096 May 01 23:37 [38;5;32mexec.script[0;00m/  
+drwx------  2 lboyd002 classes 4096 May 01 23:37 [38;5;32mls.script[0;00m/  
+
+~/rshell
+lboyd002@well $ bin/ls -l ../labs src testsa[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cl[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ca[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[3P[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[4h-a [4l[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cl[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Kbin/ls -l ../labs src tests[C[1P[4hR[4l
+../labs:
+lab00 lab01 lab02 lab03 lab04 lab05 lab06 lab07 lab08 lab09 lab10 
+
+../labs/lab01:
+. .. .lab a.out lab1.cpp lab1.out 
+
+
+../labs/lab03:
+. .. .lab 
+
+
+../labs/lab02:
+. .. .lab 
+
+
+../labs/lab08:
+. .. .lab 
+
+
+../labs/lab09:
+. .. .lab 
+
+
+../labs/lab05:
+. .. .lab 
+
+
+../labs/lab04:
+. .. .lab 
+
+
+../labs/lab06:
+. .. .lab 
+
+
+../labs/lab10:
+. .. .lab 
+
+
+../labs/lab00:
+. .. hello_world.cpp 
+
+
+../labs/lab07:
+. .. .lab 
+
+
+
+src:
+cp.cpp ls.cpp rshell.cpp Timer.h 
+
+
+tests:
+exec.script ls.script 
+
+
+~/rshell
+lboyd002@well $ bin/ls -R ../labs src testsl[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ca[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cl[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[CR[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Kbin/ls -R ../labs src tests[C[C[C
+../labs:
+lab00 lab01 lab02 lab03 lab04 lab05 lab06 lab07 lab08 lab09 lab10 
+
+../labs/lab01:
+. .. .lab a.out lab1.cpp lab1.out 
+
+
+../labs/lab03:
+. .. .lab 
+
+
+../labs/lab02:
+. .. .lab 
+
+
+../labs/lab08:
+. .. .lab 
+
+
+../labs/lab09:
+. .. .lab 
+
+
+../labs/lab05:
+. .. .lab 
+
+
+../labs/lab04:
+. .. .lab 
+
+
+../labs/lab06:
+. .. .lab 
+
+
+../labs/lab10:
+. .. .lab 
+
+
+../labs/lab00:
+. .. hello_world.cpp 
+
+
+../labs/lab07:
+. .. .lab 
+
+
+
+src:
+cp.cpp ls.cpp rshell.cpp Timer.h 
+
+
+tests:
+exec.script ls.script 
+
+
+~/rshell
+lboyd002@well $ bin/ls -R ../labs src tests[1P[4ha[4l[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C -l
+Total: 52
+drwx------  6 lboyd002 classes 4096 May 01 21:52 [47m[38;5;32m.[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [47m[38;5;32m..[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab01[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab03[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab02[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab08[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab09[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab05[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab04[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab06[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab10[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab00[0;00m/  
+drwx------  13 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab07[0;00m/  
+
+Total: 24
+drwx------  6 lboyd002 classes 4096 May 01 21:52 [47m[38;5;32m.[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [47m[38;5;32m..[0;00m/  
+drwx------  2 lboyd002 classes 4096 May 01 23:36 [38;5;32mcp.cpp[0;00m/  
+drwx------  2 lboyd002 classes 4096 May 01 23:36 [38;5;32mTimer.h[0;00m/  
+drwx------  2 lboyd002 classes 4096 May 01 23:36 [38;5;32mrshell.cpp[0;00m/  
+drwx------  2 lboyd002 classes 4096 May 01 23:36 [38;5;32mls.cpp[0;00m/  
+
+Total: 16
+drwx------  6 lboyd002 classes 4096 May 01 21:52 [47m[38;5;32m.[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [47m[38;5;32m..[0;00m/  
+drwx------  2 lboyd002 classes 4096 May 01 23:37 [38;5;32mexec.script[0;00m/  
+drwx------  2 lboyd002 classes 4096 May 01 23:37 [38;5;32mls.script[0;00m/  
+
+~/rshell
+lboyd002@well $ bin/ls -a ../labs src tests -l[K[K[K[K[K[K[K[K[K[K[K[K[K/lab1
+There was an error with opendir().: No such file or directory
+~/rshell
+lboyd002@well $ bin/ls -a ../labs/lab1[K01
+.  ..  lab1.cpp  lab1.out  .lab  a.out  
+~/rshell
+lboyd002@well $ bin/ls -a ../labs/lab01[C[1P ../labs/lab01l ../labs/lab01[C[C[C[C[C[C[C[C[C[C[C[C[C[C -a
+Total: 24
+drwx------  6 lboyd002 classes 4096 May 01 21:52 [47m[38;5;32m.[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [47m[38;5;32m..[0;00m/  
+drwx------  2 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab1.cpp[0;00m/  
+drwx------  2 lboyd002 classes 4096 Sep 30 19:44 [38;5;32mlab1.out[0;00m/  
+drwx------  2 lboyd002 classes 4096 Sep 30 19:44 [47m[38;5;32m.lab[0;00m/  
+drwx------  2 lboyd002 classes 4096 Sep 30 19:44 [38;5;32ma.out[0;00m/  
+
+~/rshell
+lboyd002@well $ bin/ls -l ../labs/lab01 -a[KR[C[1P[1P[1P
+../labs/lab01:
+a.out lab1.cpp lab1.out 
+
+
+~/rshell
+lboyd002@well $ bin/ls ../labs/lab01 -R-l ../labs/lab01 -a[3P../labs/lab01 -R[K[K./[K
+lab1.cpp  lab1.out  a.out  
+LICENSE  README.md  Makefile  bin  src  tests  
+~/rshell
+lboyd002@well $ bin/ls ../labs/lab01 .[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Kbin/ls ../labs/lab01 .[K[K[K[K[K[K[K[K[K[K[K[K[K[K.
+Documents  lab2_ex2.cpp  lab1.cpp  README.md  Music  labs  Videos  Templates  Public  lab3.cpp  cs010_practice.zip_FILES  lab2_ex3.cpp  lab2_ex1.cpp  mathematics.cpp  cs10  Pictures  Downloads  code_lab  Desktop  cs010_practice.zip  point3.h.gch  a.out  vimfiles  CS14  firstrepo  vimrc  ucr-cs100  gitlearn  rshell  lab2  hw0Check  
+~/rshell
+lboyd002@well $ bin/ls ..[K[K.. -l
+Total: 320
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [38;5;32mDocuments[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [38;5;32mlab2_ex2.cpp[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [38;5;32mlab1.cpp[0;00m/  
+-rw-------  1 lboyd002 classes 1890 May 01 21:52 README.md  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [38;5;32mMusic[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [38;5;32mlabs[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [38;5;32mVideos[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [38;5;32mTemplates[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [38;5;32mPublic[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [38;5;32mlab3.cpp[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [38;5;32mcs010_practice.zip_FILES[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [38;5;32mlab2_ex3.cpp[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [38;5;32mlab2_ex1.cpp[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [38;5;32mmathematics.cpp[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [38;5;32mcs10[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [38;5;32mPictures[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [38;5;32mDownloads[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [38;5;32mcode_lab[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [38;5;32mDesktop[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [38;5;32mcs010_practice.zip[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [38;5;32mpoint3.h.gch[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [38;5;32ma.out[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [38;5;32mvimfiles[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [38;5;32mCS14[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [38;5;32mfirstrepo[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [38;5;32mvimrc[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [38;5;32mucr-cs100[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [38;5;32mgitlearn[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [38;5;32mrshell[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [38;5;32mlab2[0;00m/  
+drwx------  52 lboyd002 classes 4096 May 01 23:36 [38;5;32mhw0Check[0;00m/  
+
+~/rshell
+lboyd002@well $ bin/ls .. -ll[K-l-l-l-l-l-l-l-l-l-l-l
+Documents  lab2_ex2.cpp  lab1.cpp  README.md  Music  labs  Videos  Templates  Public  lab3.cpp  cs010_practice.zip_FILES  lab2_ex3.cpp  lab2_ex1.cpp  mathematics.cpp  cs10  Pictures  Downloads  code_lab  Desktop  cs010_practice.zip  point3.h.gch  a.out  vimfiles  CS14  firstrepo  vimrc  ucr-cs100  gitlearn  rshell  lab2  hw0Check  
+There was an error with opendir().: No such file or directory
+~/rshell
+lboyd002@well $ bin/ls .. -l-l-l-l-l-l-l-l-l-l-l-l[1P -l-l-l-l-l-l-l-l-l-l-l-l[1P -l-l-l-l-l-l-l-l-l-l-l-l[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1P-l-l-l-l-l-l-l-l-l-l-l-l[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C -l-l-l-l-l-l-l-l-l-l-l[C[C -l-l-l-l-l-l-l-l-l-l[C[C[C -l-l-l-l-l-l-l-l-l[C[C -l-l-l-l-l-l-l-l[C[C -l-l-l-l-l-l-l[C[C -l-l-l-l-l-l[C[C -l-l-l-l-l[C[C -l-l-l-l[C[C -l-l-l[C[C -l-l[C[C -l
+Total: 36
+-rw-------  1 lboyd002 classes 1476 Apr 13 19:50 LICENSE  
+-rw-------  1 lboyd002 classes 1890 May 01 21:52 README.md  
+-rw-------  1 lboyd002 classes 302 Apr 29 22:00 Makefile  
+drwx------  2 lboyd002 classes 4096 May 01 23:36 [38;5;32mbin[0;00m/  
+drwx------  2 lboyd002 classes 4096 May 01 23:36 [38;5;32msrc[0;00m/  
+drwx------  2 lboyd002 classes 4096 May 01 23:37 [38;5;32mtests[0;00m/  
+
+~/rshell
+lboyd002@well $ bin/ls -l -l -l -l -l -l -l -l -l -l -l -l[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Kllllllllllllllllllllllllll
+There was an error with opendir().: No such file or directory
+~/rshell
+lboyd002@well $ valgrai[K[Kind bin/ls
+==1077== Memcheck, a memory error detector
+==1077== Copyright (C) 2002-2009, and GNU GPL'd, by Julian Seward et al.
+==1077== Using Valgrind-3.5.0 and LibVEX; rerun with -h for copyright info
+==1077== Command: bin/ls
+==1077== 
+LICENSE  README.md  Makefile  bin  src  tests  
+==1077== 
+==1077== HEAP SUMMARY:
+==1077==     in use at exit: 0 bytes in 0 blocks
+==1077==   total heap usage: 12 allocs, 12 frees, 65,953 bytes allocated
+==1077== 
+==1077== All heap blocks were freed -- no leaks are possible
+==1077== 
+==1077== For counts of detected and suppressed errors, rerun with: -v
+==1077== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 4 from 4)
+~/rshell
+lboyd002@well $ exit
+exit
+
+Script done on Fri 01 May 2015 11:45:30 PM PDT

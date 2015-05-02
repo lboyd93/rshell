@@ -20,28 +20,40 @@ using namespace std;
 #define FLAG_l 2
 #define FLAG_R 4 
 
+void outputcolors(dirent *direntp, struct stat s);
+bool compareNoCase( const string& s1, const string& s2 );
+void sortDir(const char* dir, vector<string> &dirlist, bool isA);
 void permission(int &total,const struct stat buf);
 string addC_str(const char *name, char d_name[]);
 void getTotal(int &total, struct stat buf, dirent *dirp);
 void printInfo(int &total, struct stat buf, dirent *dirp);
 
 //function for ls and ls -a 
-void ls(const char* path, bool isA){
+void ls(const char* path, bool isA, int size){
 	DIR *dirp;
 	if(NULL == (dirp = opendir(path))){
 		perror("There was an error with opendir().");
 		exit(1);
 	}
+	vector<string> dirList;
+	
+	sortDir(path, dirList, isA);
+	
 	struct dirent *filespecs;
+	struct stat s;
+	
 	errno = 0;
 	while( (filespecs = readdir(dirp) ) != NULL){
+		stat(path, &s);
 		if(isA){
-			cout << filespecs->d_name << "  ";
+			cout << filespecs-> d_name << "  ";
+		}
+		else if(isA && size > 1){
+			//cout << path << ":" << endl;
+			cout << filespecs-> d_name << "  ";
 		}
 		else{
-			 if (strcmp(filespecs->d_name, ".")!=0 
-			&& strcmp(filespecs->d_name, "..")!=0 
-			&& strcmp(filespecs->d_name, ".git") != 0){
+			 if (filespecs->d_name[0] != '.'){
 			cout << filespecs -> d_name << "  " ;
 			}
 		}
@@ -70,6 +82,11 @@ void ls_l(const char* dir, bool isA, bool isR){
 //	stat(dir, &s);
 	errno = 0;
 	int total=0;
+	
+	vector<string> dirlist;
+	
+	sortDir(dir, dirlist,isA);
+	
 	while(  (filespecs1=readdir(dirp)) != NULL){
 		stat(dir, &s);
 		getTotal(total, s, filespecs1);
@@ -101,10 +118,8 @@ void ls_l(const char* dir, bool isA, bool isR){
 			
 	
 		}
-		else{
-			if (strcmp(filespecs2->d_name, ".")!=0 
-				&& strcmp(filespecs2->d_name, "..")!=0 
-				&& strcmp(filespecs2->d_name, ".git") != 0){
+		if(!isA && !isR){
+			if (filespecs2-> d_name[0] != '.'){
 				//cout << "Total: " << total/2 << endl;
 				printInfo(total,s, filespecs2);
 			}
@@ -189,26 +204,6 @@ void ls_R(const char* dir, bool isA, bool isL){
 				ls_R(path.c_str(), 1, 0);
 		}
 	}
-/*	if (strcmp(filespecs->d_name, ".")!=0 
-			&& strcmp(filespecs->d_name, "..")!=0 
-			&& strcmp(filespecs->d_name, ".git") != 0){	
-		filespecs=filespecs->filespecs;
-	}	
-	cout << dir << ":" << endl;
-		
-	for(unsigned int i=0; i < dirlist.size(); i++)
-		cout << dirlist[i] << " ";
-	cout << endl << endl;
-	
-	while( (filespecs=readdir(dirp)) != NULL){
-		if(filespecs-> d_name[0] != '.'){
-			string path;
-			path += addC_str(dir, filespecs->d_name);
-			if(filespecs-> d_type == DT_DIR)
-				ls_R(path.c_str(), 0, 0);
-		}
-	}*/
-	
 	
 	if(errno != 0){
 		perror("There was an error with readdir().");
@@ -244,7 +239,9 @@ void printInfo(int &total, struct stat buf, dirent *dirp){
 	cout << " " << buf.st_nlink << " ";
 	cout << pw-> pw_name << " ";
 	cout << gp -> gr_name << " ";
-	cout << buf.st_size << " " << buffer << " " << dirp->d_name << endl;
+	cout << buf.st_size << " " << buffer << " "; 
+	outputcolors(dirp, buf)  ;
+	cout << endl;
 }
 
 void getTotal(int &total, struct stat buf, dirent *dirp){
@@ -257,25 +254,24 @@ void getTotal(int &total, struct stat buf, dirent *dirp){
 void permission(int &total,struct stat buf){
 	
 	//output all stat
-	(buf.st_mode & S_IFDIR)? cout << "d":
+	(buf.st_mode & S_IFREG) ? cout<< '-':
+	(buf.st_mode & S_IFDIR)? cout << 'd':
 	(buf.st_mode & S_IFCHR) ? cout<< 'c':
 	(buf.st_mode & S_IFBLK) ? cout<< 'b':
-	(buf.st_mode & S_IFIFO) ? cout<< 'f':
-	(buf.st_mode & S_IFREG) ? cout<< '-':
+	cout << '-';	
 	
+	(buf.st_mode & S_IRUSR)? cout << 'r': cout << '-';
+	(buf.st_mode & S_IWUSR)? cout << 'w': cout << '-';
+	(buf.st_mode & S_IXUSR)? cout << 'x': cout << '-';
 	
-	(buf.st_mode & S_IRUSR)? cout << "r": cout << "-";
-	(buf.st_mode & S_IWUSR)? cout << "w": cout << "-";
-	(buf.st_mode & S_IXUSR)? cout << "x": cout << "-";
+	(buf.st_mode & S_IRGRP)? cout << 'r': cout << '-';
+	(buf.st_mode & S_IWGRP)? cout << 'w': cout << '-';
+	(buf.st_mode & S_IXGRP)? cout << 'x': cout << '-';
 	
-	(buf.st_mode & S_IRGRP)? cout << "r": cout << "-";
-	(buf.st_mode & S_IWGRP)? cout << "w": cout << "-";
-	(buf.st_mode & S_IXGRP)? cout << "x": cout << "-";
-	
-	(buf.st_mode & S_IROTH)? cout << "r": cout << "-";
-	(buf.st_mode & S_IWOTH)? cout << "w": cout << "-";
-	(buf.st_mode & S_IXOTH)? cout << "x": cout << "-";
-	cout << " ";
+	(buf.st_mode & S_IROTH)? cout << 'r': cout << '-';
+	(buf.st_mode & S_IWOTH)? cout << 'w': cout << '-';
+	(buf.st_mode & S_IXOTH)? cout << 'x': cout << '-';
+	cout << ' ';
 }
 
 int main(int argc, char* argv[]){
@@ -333,40 +329,49 @@ int main(int argc, char* argv[]){
 	}
 	
 	//sorting directories
+	/*sort(dir_names.begin(), dir_names.end(), compareNoCase);
+	
+	cout << "Outputting sorted Directories: ";
 	for(unsigned int i=0; i< dir_names.size(); i++)
-		sort(dir_names.begin(), dir_names.end(), compareNoCase);
-	
-	
-	if(dir_names.size()== 0){
+	{
+		cout << dir_names[i] << " ";
+	}
+	cout << endl;*/
+	int size = dir_names.size();	
+	if(size== 0){
 		if( !isA && !isL && !isR)
-			ls(".", 0);
+			ls(".", 0, size);
 		
-		if(isA && !isR) ls(".", isA);
+		else if(isA && !isR && !isL) ls(".", 1, size);
+		
+		else if(isA && isL && !isR) ls_l(".", 1,0);
 	
-		if(isL)
-			ls_l(".", isA, isR);
-		if(isR && !isA && !isL)
+		else if(isL && !isA && !isR)
+			ls_l(".", 0, 0);
+		else if(isR && !isA && !isL)
 			ls_R(".", 0, 0);
-		if(isR && isA && !isL)
+		else if(isR && isA && !isL)
 			ls_R(".", 1, 0);
-		if(isR && isA && isL)
+		else if(isR && isA && isL)
 			ls_R(".", 1, 1);
 	}
 		
 	for(unsigned int i =0; i < dir_names.size(); i++){
 		
 		if( !isA && !isL && !isR)
-			ls(dir_names[i], isA);
+			ls(dir_names[i], isA, size);
 		
-		if(isA && !isR) ls(dir_names[i], isA);
-	
-		if(isL)
-			ls_l(dir_names[i], isA, isR);
-		if(isR && !isA && !isL)
+		else if(isA && !isR&& !isL) ls(dir_names[i], isA, size);
+		
+		else if(isA && isL && !isR) ls_l(dir_names[i], 1,0);		
+
+		else if(isL && !isA && !isR)
+			ls_l(dir_names[i], 0, 0);
+		else if(isR && !isA && !isL)
 			ls_R(dir_names[i], 0, 0);
-		if(isR && isA && !isL)
+		else if(isR && isA && !isL)
 			ls_R(dir_names[i], 1, 0);
-		if(isR && isA && isL)
+		else if(isR && isA && isL)
 			ls_R(dir_names[i], 1, 1);
 	}
 	return 0;
@@ -375,4 +380,35 @@ int main(int argc, char* argv[]){
 //function to add path names together
 string addC_str(const char *name, char d_name[]){
 	return string(name) + "/" + string(d_name);
+}
+
+void outputcolors(dirent *direntp, struct stat s)
+{
+	//grey back, blue words
+	if(direntp->d_name[0] == '.' && (s.st_mode & S_IFDIR)){
+		cout<<"\033[47m\033[38;5;32m"<<direntp->d_name<<"\033[0;00m";
+	}
+	//grey back ground green words
+	else if(direntp->d_name[0] == '.' && (s.st_mode & S_IXUSR)){
+		cout<<"\033[47m\033[38;5;34m"<<direntp->d_name<<"\033[0;00m";
+	}
+
+	else if(direntp->d_name[0] == '.'){
+		cout<<"\033[47m"<<direntp->d_name<<"\033[0;00m";
+	}
+	//directory
+	else if(s.st_mode & S_IFDIR){
+		cout<<"\033[38;5;32m"<<direntp->d_name<<"\033[0;00m";
+	}
+	//executable
+	else if(s.st_mode & S_IXUSR){
+		cout<<"\033[38;5;34m"<<direntp->d_name<<"\033[0;00m";
+	}
+	else
+	{
+		cout<<direntp->d_name;	
+	}
+	if(s.st_mode & S_IFDIR) cout<< '/';
+	else if(s.st_mode & S_IXUSR) cout<< '*';
+	cout<<"  ";
 }
