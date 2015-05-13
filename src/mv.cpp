@@ -20,7 +20,7 @@ int main(int argc , char* argv[]){
 	struct stat s;
 
 	if(argc < 3){
-		cout<<"not enough argument."<<endl;		
+		cout<<"Not enough arguments."<<endl;		
 		return 0;
 	}	
 	
@@ -53,7 +53,7 @@ int main(int argc , char* argv[]){
 		}
 	}
 	else{
-		cout<<"wrong input 1"<<endl;
+		cout<<"wrong input."<<endl;
 		return 0;
 	}
 	
