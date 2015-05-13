@@ -20,7 +20,7 @@ void checkcomm(string &str){
 //could not finish
 //finds && and ||, puts numbers 1 and 2 respectively
 //to keep track of them in a vector
-vector<int> orderCmnds(char *cmnds, int size){
+/*vector<int> orderCmnds(char *cmnds, int size){
 	vector<int> vec;
 	int pos=0;
 	while(cmnds[pos] != '\0'){
@@ -38,7 +38,9 @@ vector<int> orderCmnds(char *cmnds, int size){
 			pos++;			
 	}
 	return vec;
-}
+}*/
+
+void simpleFork(char **argv);
 
 int main(/*int argc, char *argv[]*/){	//couldn't get argv to work
 	
@@ -110,35 +112,33 @@ int main(/*int argc, char *argv[]*/){	//couldn't get argv to work
 		
 		//for(unsigned i=0; i < order.size(); i++)
 		//	cout << order[i] << ' ';
-		
-		int status = 0;
-		int i = fork();
-		if(i == -1){
-			//error check fork
-			perror("There was an error with fork()");
-			exit(1);
-		}
-		else if(i == 0) {
-			//error check execvp
-			if (-1==execvp(argv[0], argv)) {
-				perror("execvp didn't work correctly");
-				exit(1);
-			}
-		}
-		//in parent
-		else if(i > 0){
-			//error check parent
-			if(wait(&status)==-1){
-				perror("Error in wait");
-				return -1;
-			}
-			if(WEXITSTATUS(status) == 3){
-				delete argv;
-				return -1;
-			}
-		}
+		simpleFork(argv);	
 	}
-	//delete argv;
 	
 	return 0;
+}
+
+void simpleFork(char **argv){
+	int status = 0;
+	int i = fork();
+	if(i == -1){
+		//error check fork
+		perror("There was an error with fork()");
+		exit(1);
+	}
+	else if(i == 0) {
+		//error check execvp
+		if (-1==execvp(argv[0], argv)) {
+			perror("execvp didn't work correctly");
+			exit(1);
+		}
+	}
+	//in parent
+	else if(i > 0){
+		//error check parent
+		if(wait(&status)==-1){
+			perror("Error in wait");
+			exit(1);
+		}
+	}
 }
