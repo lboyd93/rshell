@@ -17,30 +17,9 @@ void checkcomm(string &str){
 		str.erase(comment);
 }
 
-//could not finish
-//finds && and ||, puts numbers 1 and 2 respectively
-//to keep track of them in a vector
-/*vector<int> orderCmnds(char *cmnds, int size){
-	vector<int> vec;
-	int pos=0;
-	while(cmnds[pos] != '\0'){
-		if((cmnds[pos] == '&') && pos+1 < size  && (cmnds[pos+1] == '&')){
-			vec.push_back(1);
-			cmnds[pos+1]= ' ';
-			pos = pos+2;
-		}
-		if((cmnds[pos] == '|') && pos+1 < size && (cmnds[pos+1] == '|')){
-			vec.push_back(2);
-			cmnds[pos+1] = ' ';
-			pos = pos + 2; 
-		}
-		else
-			pos++;			
-	}
-	return vec;
-}*/
-
+void forkPipes(char **argv, char **afterPipe);
 void simpleFork(char **argv);
+void getPipes(char** argv);
 
 int main(/*int argc, char *argv[]*/){	//couldn't get argv to work
 	
@@ -68,6 +47,8 @@ int main(/*int argc, char *argv[]*/){	//couldn't get argv to work
 		
 		string input;
 		char cmndline[1024];
+		
+		
 		
 		cout << login << "@" << host << "$ ";
 		
@@ -112,7 +93,11 @@ int main(/*int argc, char *argv[]*/){	//couldn't get argv to work
 		
 		//for(unsigned i=0; i < order.size(); i++)
 		//	cout << order[i] << ' ';
-		simpleFork(argv);	
+		//simpleFork(argv);
+		
+		getPipes(argv);
+		
+		delete argv;	
 	}
 	
 	return 0;
@@ -141,4 +126,78 @@ void simpleFork(char **argv){
 			exit(1);
 		}
 	}
+}
+
+void getPipes(char** argv){
+	bool pipeFound = false;
+	
+	char **args = argv;
+	char **nextA = argv;
+	
+	for(int i=0; argv[i] != '\0'; i++){
+		if(strcmp(argv[i], "|") == 0){
+			pipeFound=true;
+			argv[i] = '\0';
+			
+			char** beforeA = args;
+			nextA = args + i + 1;
+			forkPipes(beforeA, nextA);
+		}
+	}
+	
+	if(!pipeFound){
+		//TODO
+	}
+}
+
+void forkPipes(char **argv, char **afterPipe){
+	int fd[2];
+	int pid;
+	int status;
+	if(pipe(fd) == -1){
+		perror("Error with pipe.");
+		exit(EXIT_FAILURE);
+	}
+	
+	pid = fork();
+	if(pid == -1){
+		perror("There was an error with piping fork.");
+		exit(1);
+	}
+	else if(pid ==0){
+		if(close(fd[0]) == -1){
+			perror("Error with close in piping.");
+			exit(1);
+		}
+		if(dup2(fd[1],1)==-1){
+			perror("Error with dup2 in piping.");
+		}
+		if(execvp(argv[0], argv) == -1){
+			perror("There was an error with execvp piping");
+			exit(1);
+		}
+		else{
+			exit(0);
+		}	
+	}
+	else{
+		if(close(fd[0]) == -1){
+			perror("Error with close in piping.");
+			exit(1);
+		}
+		
+		int fd0 = dup(0);
+		if(fd0 == -1){
+			perror("There was an error with dup.");
+		}
+		if(dup2(fd[0],0) == -1){
+			perror("Error with dup2 in piping.");
+		}
+		while(waitpid(-1, &status, 0) >= 0);
+		getPipes(afterPipe);
+		if(dup2(fd0,0)==-1){
+			perror("Error with dup2 in piping.");
+		}
+		
+	}	
 }
