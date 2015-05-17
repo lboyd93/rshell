@@ -27,7 +27,7 @@ int main(int argc , char* argv[]){
 	cout<<"not enough argument."<<endl;		
 	}
 	
-	for(unsigned int i=0; i<argc; i++){
+	for(int i=0; i<argc; i++){
 		string temp =argv[i];
 		string R = "-r";
 		if(strcmp(temp.c_str(),R.c_str()) == 0){
@@ -35,7 +35,7 @@ int main(int argc , char* argv[]){
 		}
 	}
 
-	for(unsigned int i=1; i<argc; i++){
+	for(int i=1; i<argc; i++){
 		string temp =argv[i];
 		string R = "-r";
 		if(strcmp(temp.c_str(),R.c_str()) != 0){
