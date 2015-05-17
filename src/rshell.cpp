@@ -105,8 +105,10 @@ int main(/*int argc, char *argv[]*/){	//couldn't get argv to work
 		IOredir(argv);
 		getPipes(argv);
 		
-		dup2(sdi, 0);
-		dup2(sdo,1);
+		if(dup2(sdi, 0) == -1)
+			perror("There was an error with dup2");
+		if(dup2(sdo,1) == -1)
+			perror("There was an error with dup2");
 		
 		delete[] argv;	
 	}
@@ -235,13 +237,30 @@ void IOredir(char *argv[]){
 	for(int i=0; argv[i] != '\0'; i++){
 		if(strcmp(argv[i], "<") == 0){
 			int file = open(argv[i+1], O_RDONLY);
-			dup2(file, 0);
+			if(file == -1)
+				perror("There was an error with open");
+			if(dup2(file, 0)==-1)
+				perror("There was an error in dup2");
 			argv[i] = NULL;
+			break;
 		}
 		else if(strcmp(argv[i], ">") == 0){
 			int file = open(argv[i + 1], O_CREAT|O_TRUNC|O_WRONLY, 0666);
-			dup2(file, 1);
+			if(file ==-1)
+				perror("There was an error with open");
+			if(dup2(file, 1)== -1)
+				perror("There was an error with dup2");
 			argv[i] = NULL;
+			break;
+		}
+		else if(!strcmp(argv[i], ">>")){
+			argv[i] = NULL;
+			int file = open(argv[i+1], O_CREAT|O_WRONLY|O_APPEND, 0666);
+			if(file == -1)
+				perror("There was an error with open");
+			if(dup2(file,1) == -1)
+				perror("There was an error with dup2");
+			break;
 		}
 	}
 }
