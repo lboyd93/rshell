@@ -8,6 +8,9 @@
 #include <unistd.h>	//execvp, fork, gethost, getlogin
 #include <string.h>	//strtok
 #include <vector>
+#include <fcntl.h>
+#include <sys/stat.h>
+
 using namespace std;
 
 //checks for comments and if stuff is after comments, it deletes it
@@ -19,6 +22,8 @@ void checkcomm(string &str){
 		str.erase(str.begin()+comment, str.end());
 	//cout << "This is str: " << str << endl; 
 }
+
+void IOredir(char **argv);
 void tokenize(char *cmnd, char **argv);
 void forkPipes(char **argv, char **afterPipe);
 void simpleFork(char **argv);
@@ -49,6 +54,8 @@ int main(/*int argc, char *argv[]*/){	//couldn't get argv to work
 	while(1){
 		string input;
 		char buf[1000];
+		int sdi = dup(0), sdo = dup(1);
+		
 		//char **argv;
 		//argv = new char*[1024];
 		
@@ -95,7 +102,11 @@ int main(/*int argc, char *argv[]*/){	//couldn't get argv to work
 		//	cout << argv[i] << ' ';
 		//simpleFork(argv);
 		
+		IOredir(argv);
 		getPipes(argv);
+		
+		dup2(sdi, 0);
+		dup2(sdo,1);
 		
 		delete[] argv;	
 	}
@@ -217,5 +228,20 @@ void forkPipes(char **argv, char **afterPipe){
 	
 	if(dup2(savestdin,0)==-1){
 		perror("Error with dup2 in piping.");
+	}
+}
+
+void IOredir(char *argv[]){
+	for(int i=0; argv[i] != '\0'; i++){
+		if(strcmp(argv[i], "<") == 0){
+			int file = open(argv[i+1], O_RDONLY);
+			dup2(file, 0);
+			argv[i] = NULL;
+		}
+		else if(strcmp(argv[i], ">") == 0){
+			int file = open(argv[i + 1], O_CREAT|O_TRUNC|O_WRONLY, 0666);
+			dup2(file, 1);
+			argv[i] = NULL;
+		}
 	}
 }
