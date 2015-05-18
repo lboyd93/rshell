@@ -44,7 +44,8 @@ void ls(const char* path, bool isA, int size){
 	
 	errno = 0;
 	while( (filespecs = readdir(dirp) ) != NULL){
-		stat(path, &s);
+		if(stat(path, &s)== -1)
+			perror("Error with stat");
 		if(isA){
 			cout << filespecs-> d_name << "  ";
 		}
@@ -88,7 +89,8 @@ void ls_l(const char* dir, bool isA, bool isR){
 	sortDir(dir, dirlist,isA);
 	
 	while(  (filespecs1=readdir(dirp)) != NULL){
-		stat(dir, &s);
+		if(stat(dir, &s)==-1)
+			perror("Error with stat");
 		getTotal(total, s, filespecs1);
 	}
 	
@@ -107,7 +109,10 @@ void ls_l(const char* dir, bool isA, bool isR){
 	struct dirent *filespecs2;
 		
 	while( (filespecs2 = readdir(dirp) ) != NULL){
-		stat(dir, &s);
+		//if(filespecs2 == -1)
+		//	perror("There was an error with readir");
+		if(stat(dir, &s)==-1)
+			perror("There was an error with stat");
 		if(isA){
 			//cout << "Total: " << total/2 << endl;
 			printInfo(total,s,filespecs2);
@@ -219,7 +224,8 @@ void ls_R(const char* dir, bool isA, bool isL){
 }
 
 void printInfo(int &total, struct stat buf, dirent *dirp){
-	stat(dirp->d_name, &buf);
+	if(stat(dirp->d_name, &buf)==-1)
+		perror("Error with stat");
 	
 	//create a struct with for the time
 	struct tm* timeinfo;
