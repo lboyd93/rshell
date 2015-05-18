@@ -54,7 +54,10 @@ int main(){
 		string input;
 		char buf[1000];
 		int sdi = dup(0), sdo = dup(1);
-		
+		if(sdi == -1)
+			perror("There was an error with dup");
+		if(sdo == -1)
+			perror("There was an error with dup");	
 		cout << login << "@" << host << "$ ";
 		
 		//get the input from user
@@ -283,5 +286,50 @@ void fixSpaces(string &input){
 		//if | is right after word
 		else if(input[i] == '|' && input[i-1] != ' ' && i!=0)
 			input.insert(i, " ");
+		
+		//check if < is right next to word
+		//if < is in the middle of a word
+		if(input[i] == '<' && input[i+1] != ' ' && input[i-1] != ' ' && i !=0){
+			input.insert(i+1, " ");
+			input.insert(i, " ");
+		}
+		//if < is right before a word
+		else if(input[i] == '<' && input[i+1] != ' ')
+			input.insert(i+1, " ");
+		//if < is right after word
+		else if(input[i] == '<' && input[i-1] != ' ' && i!=0)
+			input.insert(i, " ");
+		
+		
+		//check if > is right next to word
+		/*if( input[i-1] != '>' && input[i+1]!= '>'){
+			//if > is in the middle of a word
+			if(input[i] == '>' && input[i+1] != ' ' && input[i-1] != ' ' && i !=0){
+				input.insert(i+1, " ");
+				input.insert(i, " ");
+			}
+			//if > is right before a word
+			else if(input[i] == '>' && input[i+1] != ' ')
+				input.insert(i+1, " ");
+			//if > is right after word
+			else if(input[i] == '>' && input[i-1] != ' ' && i!=0)
+				input.insert(i, " ");
+		}
+		
+		//has to be >>
+		if(input[i-1] != '>' && input[i+1] == '>'){
+			//if >> is in the middle of a word
+			if(input[i] == '>' && input[i+1] == '>' && input[i-1] != '>' && i !=0){
+				input.insert(i-1, " ");
+				input.insert(i, " ");
+			}	
+			//if | is right before a word
+			else if(input[i] == '|' && input[i+1] != ' ')
+				input.insert(i+1, " ");
+			//if | is right after word
+			else if(input[i] == '|' && input[i-1] != ' ' && i!=0)
+				input.insert(i, " ");
+			
+		}*/
 	}
 }
