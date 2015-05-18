@@ -23,14 +23,13 @@ void checkcomm(string &str){
 	//cout << "This is str: " << str << endl; 
 }
 
+void fixSpaces(string &input);
 void IOredir(char **argv);
-void tokenize(char *cmnd, char **argv);
 void forkPipes(char **argv, char **afterPipe);
 void simpleFork(char **argv);
 void getPipes(char** argv);
 
-int main(/*int argc, char *argv[]*/){	//couldn't get argv to work
-	
+int main(){
 	//get username and hostname
 	char login[100];
 	
@@ -56,9 +55,6 @@ int main(/*int argc, char *argv[]*/){	//couldn't get argv to work
 		char buf[1000];
 		int sdi = dup(0), sdo = dup(1);
 		
-		//char **argv;
-		//argv = new char*[1024];
-		
 		cout << login << "@" << host << "$ ";
 		
 		//get the input from user
@@ -68,6 +64,9 @@ int main(/*int argc, char *argv[]*/){	//couldn't get argv to work
 		if(input == "")
 			continue;
 		
+		//checks the spacing
+		fixSpaces(input);
+			
 		//check for comments
 		checkcomm(input);
 
@@ -77,14 +76,10 @@ int main(/*int argc, char *argv[]*/){	//couldn't get argv to work
 		if( input.find("exit") != string::npos )
 			exit(1);	
 		
-		//tokenize(buf, argv);
-		
 		//tokenize the commandline
-		//char *tok;// *save;
 		char delim[]= " \t\n";
 		
 		int size=input.size()+1;
-		//vector<int> order;
 		
 		char **argv=new char*[size];
 		int pos=0;
@@ -100,7 +95,6 @@ int main(/*int argc, char *argv[]*/){	//couldn't get argv to work
 		
 		//for(unsigned i=0; argv[i] != NULL ; i++)
 		//	cout << argv[i] << ' ';
-		//simpleFork(argv);
 		
 		IOredir(argv);
 		getPipes(argv);
@@ -170,6 +164,7 @@ void getPipes(char** argv){
 	}
 }
 
+//execution if the command line has pipes
 void forkPipes(char **argv, char **afterPipe){
 	int fd[2];
 	int pid;
@@ -206,9 +201,9 @@ void forkPipes(char **argv, char **afterPipe){
 	
 	//in parent
 	//save stdin
-	int savestdin=dup(0);
+	int save=dup(0);
 	
-	if((savestdin == -1))
+	if((save== -1))
 		perror("There was an error with dup.");
 	//close std out
 	if(close(fd[1]) == -1){
@@ -228,14 +223,18 @@ void forkPipes(char **argv, char **afterPipe){
 	//check for pipes after we execute
 	getPipes(afterPipe);
 	
-	if(dup2(savestdin,0)==-1){
+	if(dup2(save,0)==-1){
 		perror("Error with dup2 in piping.");
 	}
 }
 
+//deals with the IO redirection
 void IOredir(char *argv[]){
+	//check if there are any I/O redirection symbols
 	for(int i=0; argv[i] != '\0'; i++){
+		//check for "<" output redir
 		if(strcmp(argv[i], "<") == 0){
+			//open the file for read only
 			int file = open(argv[i+1], O_RDONLY);
 			if(file == -1)
 				perror("There was an error with open");
@@ -244,7 +243,9 @@ void IOredir(char *argv[]){
 			argv[i] = NULL;
 			break;
 		}
+		//check for ">" input redir
 		else if(strcmp(argv[i], ">") == 0){
+			//open the file, create or truncate and make write only
 			int file = open(argv[i + 1], O_CREAT|O_TRUNC|O_WRONLY, 0666);
 			if(file ==-1)
 				perror("There was an error with open");
@@ -253,8 +254,10 @@ void IOredir(char *argv[]){
 			argv[i] = NULL;
 			break;
 		}
+		//check for appending ">>" input redir
 		else if(!strcmp(argv[i], ">>")){
 			argv[i] = NULL;
+			//open the file, create or append to old file and make write only
 			int file = open(argv[i+1], O_CREAT|O_WRONLY|O_APPEND, 0666);
 			if(file == -1)
 				perror("There was an error with open");
@@ -262,5 +265,23 @@ void IOredir(char *argv[]){
 				perror("There was an error with dup2");
 			break;
 		}
+	}
+}
+
+
+void fixSpaces(string &input){
+	for(unsigned int i = 0; i < input.size(); i++){
+		//check if | is right next to word
+		//if | is in the middle of a word
+		if(input[i] == '|' && input[i+1] != ' ' && input[i-1] != ' ' && i !=0){
+			input.insert(i+1, " ");
+			input.insert(i, " ");
+		}
+		//if | is right before a word
+		else if(input[i] == '|' && input[i+1] != ' ')
+			input.insert(i+1, " ");
+		//if | is right after word
+		else if(input[i] == '|' && input[i-1] != ' ' && i!=0)
+			input.insert(i, " ");
 	}
 }
