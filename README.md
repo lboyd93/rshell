@@ -8,9 +8,9 @@ The purpose of this program is to execute a simple command shell named rshell wh
 
 * Rshell works with comments in the command line and also multple flags.
 
-* It is capable of I/O redirection using >>, >, and <
+* It is capable of I/O redirection using >>, >, and <.
 
-* Rshell works with piping two programs together
+* Rshell works with piping two or more  programs together.
 
 ## Add Ons ##
 
