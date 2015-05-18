@@ -1,0 +1,15 @@
+total 36
+drwx------  6 lboyd002 classes 4096 May 17 23:17 .
+drwx------ 44 lboyd002 classes 4096 May 17 23:10 ..
+drwx------  2 lboyd002 classes 4096 May 17 23:12 bin
+-rw-------  1 lboyd002 classes   31 May 17 21:53 file.txt
+drwx------  8 lboyd002 classes 4096 May 17 22:47 .git
+-rw-------  1 lboyd002 classes 1476 May 17 16:08 LICENSE
+-rw-------  1 lboyd002 classes   26 May 17 22:13 lower.txt
+-rw-------  1 lboyd002 classes    0 May 17 23:17 ls.txt
+-rw-------  1 lboyd002 classes  302 May 17 16:49 Makefile
+-rw-------  1 lboyd002 classes   45 May 17 21:59 name.txt
+-rw-------  1 lboyd002 classes 2733 May 17 22:46 README.md
+drwx------  2 lboyd002 classes 4096 May 17 22:44 src
+drwx------  2 lboyd002 classes 4096 May 17 23:16 tests
+-rw-------  1 lboyd002 classes   39 May 17 23:10 veggie.txt
