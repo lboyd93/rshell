@@ -1,0 +1,196 @@
+Script started on Sun 17 May 2015 11:22:36 PM PDT
+~
+lboyd002@hammer $ cd rshell
+~/rshell
+lboyd002@hammer $ bin/rshell
+lboyd002@hammer$ cat name.txt
+beth
+dan
+ann
+lauren
+julia
+diane
+jessica
+rita
+lboyd002@hammer$ cat name.txt |  |sort #sorts       s checks piping without spaces and sorts names
+ann
+beth
+dan
+diane
+jessica
+julia
+lauren
+rita
+lboyd002@hammer$ ls -la   > ls.txt #puts output of la  ls -al  la to la s.txt
+lboyd002@hammer$ cat ls.txt
+total 36
+drwx------  6 lboyd002 classes 4096 May 17 23:17 .
+drwx------ 44 lboyd002 classes 4096 May 17 23:10 ..
+drwx------  2 lboyd002 classes 4096 May 17 23:12 bin
+-rw-------  1 lboyd002 classes   31 May 17 21:53 file.txt
+drwx------  8 lboyd002 classes 4096 May 17 22:47 .git
+-rw-------  1 lboyd002 classes 1476 May 17 16:08 LICENSE
+-rw-------  1 lboyd002 classes   26 May 17 22:13 lower.txt
+-rw-------  1 lboyd002 classes    0 May 17 23:17 ls.txt
+-rw-------  1 lboyd002 classes  302 May 17 16:49 Makefile
+-rw-------  1 lboyd002 classes   45 May 17 21:59 name.txt
+-rw-------  1 lboyd002 classes 2733 May 17 22:46 README.md
+drwx------  2 lboyd002 classes 4096 May 17 22:44 src
+drwx------  2 lboyd002 classes 4096 May 17 23:16 tests
+-rw-------  1 lboyd002 classes   39 May 17 23:10 veggie.txt
+lboyd002@hammer$ ls -la #h chin  ex ckti  ing to see if its the same
+total 40
+drwx------  6 lboyd002 classes 4096 May 17 23:17 .
+drwx------ 44 lboyd002 classes 4096 May 17 23:10 ..
+drwx------  2 lboyd002 classes 4096 May 17 23:12 bin
+-rw-------  1 lboyd002 classes   31 May 17 21:53 file.txt
+drwx------  8 lboyd002 classes 4096 May 17 22:47 .git
+-rw-------  1 lboyd002 classes 1476 May 17 16:08 LICENSE
+-rw-------  1 lboyd002 classes   26 May 17 22:13 lower.txt
+-rw-------  1 lboyd002 classes  792 May 17 23:17 ls.txt
+-rw-------  1 lboyd002 classes  302 May 17 16:49 Makefile
+-rw-------  1 lboyd002 classes   45 May 17 21:59 name.txt
+-rw-------  1 lboyd002 classes 2733 May 17 22:46 README.md
+drwx------  2 lboyd002 classes 4096 May 17 22:44 src
+drwx------  2 lboyd002 classes 4096 May 17 23:16 tests
+-rw-------  1 lboyd002 classes   39 May 17 23:10 veggie.txt
+lboyd002@hammer$ exh  cho this is a sn enta ence | ca                   |csa  at #check     checking  ng pipes it  wiht  th spaces
+this is a sentence
+lboyd002@hammer$ ^[[A    c ex cho this is a snece    enctence  |                cat
+this is a senctence
+lboyd002@hammer$ exho   chothis     this is a sentence                 |                     cat
+this is a sentence
+lboyd002@hammer$ #c all the sam  e output abot ve
+lboyd002@hammer$ cat veggies .txt
+broccoli
+pepper
+carrot
+tomatoe
+lettuce
+lboyd002@hammer$ echp   o cabbage ava ocado califlower >> veggie.txt #add a few v          ppend to the end of gile    file
+lboyd002@hammer$ cat veggie.tc xt
+broccoli
+pepper
+carrot
+tomatoe
+lettuce
+cabbage avocado califlower
+lboyd002@hammer$ #goi   goint to           cat name.tst  xt
+beth
+dan
+ann
+lauren
+julia
+diane
+jessica
+rita
+lboyd002@hammer$ #put name.txt in org der and add to new file
+lboyd002@hammer$ cat name.txt | sort > sorted n  names.txt
+lboyd002@hammer$ cat sortednames.tct  xt
+ann
+beth
+dan
+diane
+jessica
+julia
+lauren
+rita
+lboyd002@hammer$ exho     cho this is a new t file for the threi         cs100 . >> inout   put.txt
+lboyd002@hammer$ cat input.txt
+this is a new file for cs100
+lboyd002@hammer$ cat input.txt | tee output1 > output1 2 #put out   input.txt in nw   ew file them n add to another
+lboyd002@hammer$ cat output1
+this is a new file for cs100
+lboyd002@hammer$ cat output2
+this is a new file for cs100
+lboyd002@hammer$ cat output2 | tr A-A Z a-Z z |tee newfiel  le1 | tr a-z                                                 xa  #make new file wit  h half upper case half lower case letters
+lboyd002@hammer$ vim upperloer  wer.txt
+7[?47h[?1h=[1;38r[m[H[2J[38;1H"upperlower.txt" [New File][>c[2;1H[1m[34m~                                                                                               [3;1H~                                                                                               [4;1H~                                                                                               [5;1H~                                                                                               [6;1H~                                                                                               [7;1H~                                                                                               [8;1H~                                                                                               [9;1H~                                                                                               [10;1H~                                                                                               [11;1H~                                                                                               [12;1H~                                                                                               [13;1H~                                                                                               [14;1H~                                                                                               [15;1H~                                                                                               [16;1H~                                                                                               [17;1H~                                                                                               [18;1H~                                                                                               [19;1H~                                                                                               [20;1H~                                                                                               [21;1H~                                                                                               [22;1H~                                                                                               [23;1H~                                                                                               [24;1H~                                                                                               [25;1H~                                                                                               [26;1H~                                                                                               [27;1H~                                                                                               [28;1H~                                                                                               [29;1H~                                                                                               [30;1H~                                                                                               [31;1H~                                                                                               [32;1H~                                                                                               [33;1H~                                                                                               [34;1H~                                                                                               [35;1H~                                                                                               [36;1H~                                                                                               [37;1H~                                                                                               [m[38;79H0,0-1[9CAll[1;1HP+q436f\P+q6b75\P+q6b64\P+q6b72\P+q6b6c\P+q2332\P+q2334\P+q2569\P+q2a37\P+q6b31\[38;1H[1m-- INSERT --[m[38;13H[K[38;79H0,1[11CAll[1;1Ht[38;79H1,2[1;2Hth[38;81H3[1;3Hhi[38;81H4[1;4His[38;81H5[1;5H[38;81H6[1;6H i[38;81H7[1;7His[38;81H8[1;8H[38;81H9[1;9H l[38;81H10[1;10Hlo[38;82H1[1;11How[38;82H2[1;12Hwe[38;82H3[1;13Her[38;82H4[1;14Hr.[38;82H5[1;15H[38;82H6[1;16H T[38;82H7[1;17HTH[38;82H8[1;18HHi[38;82H9[1;19His[38;81H20[1;20H[1;19H[K[38;81H19[1;19H[1;18H[K[38;82H8[1;18H[1;17H[K[38;82H7[1;17HTh[38;82H8[1;18Hhis[38;81H21[1;21H i[38;82H2[1;22His[38;82H3[1;23H[38;82H4[1;24H u[38;82H5[1;25Hup[38;82H6[1;26Hpp[38;82H7[1;27Hpe[38;82H8[1;28Her[38;82H9[1;29H[1;28H[K[38;82H8[1;28H[1;27H[K[38;82H7[1;27H[1;26H[K[38;82H6[1;26H[1;17H[K[38;81H17[1;17H[1;16H[K[38;82H6[1;16H[38;82H5[1;15H[38;82H6[1;16H T[38;82H7[1;17HTH[38;82H8[1;18HHI[38;82H9[1;19HIS[38;81H20[1;20H[38;82H1[1;21H I[38;82H2[1;22HIS[38;82H3[1;23H[38;82H4[1;24H U[38;82H5[1;25HUP[38;82H6[1;26HPP[38;82H7[1;27HPE[38;82H8[1;28HER[38;82H9[1;29HR>[38;81H30[1;30H[1;29H[K[38;81H29[1;29HR.[38;81H30[1;30H[38;1H[K[1;29H[38;79H1,29[10CAll[1;29H[38;79H[K[38;1H:wq"upperlower.txt" [New] 1L, 30C written
+[?1l>[2J[?47l8lboyd002@hammer$ cat upperloer  wer.txt
+this is lower. THIS IS UPPER.
+lboyd002@hammer$ #make 2 new files using piping and redirection with last text file
+lboyd002@hammer$ #one wit ll be upper a case, one lower case
+lboyd002@hammer$ ca  t upperlower.txt ? | tr a A-Z a-z |tee newfile1 | tr a-z A-z | > newfile2
+lboyd002@hammer$ cat newfile1
+this is lower. this is upper.
+lboyd002@hammer$ new   ca  t newfile2
+THIS IS LOWER. THIS IS UPPER.
+lboyd002@hammer$ #  make the le s -l uppercare  se ad nd put  in   in a new file f
+lboyd002@hammer$ ls -l | tr a-z A-z Z | tee f
+TOTAL 32
+DRWX------ 2 LBOYD002 CLASSES 4096 MAY 17 23:12 BIN
+-RW------- 1 LBOYD002 CLASSES   31 MAY 17 21:53 FILE.TXT
+-RW------- 1 LBOYD002 CLASSES   29 MAY 17 23:21 INPUT.TXT
+-RW------- 1 LBOYD002 CLASSES 1476 MAY 17 16:08 LICENSE
+-RW------- 1 LBOYD002 CLASSES   26 MAY 17 22:13 LOWER.TXT
+-RW------- 1 LBOYD002 CLASSES   30 MAY 17 23:25 LOWERUPPER.TXT
+-RW------- 1 LBOYD002 CLASSES  792 MAY 17 23:17 LS.TXT
+-RW------- 1 LBOYD002 CLASSES  302 MAY 17 16:49 MAKEFILE
+-RW------- 1 LBOYD002 CLASSES   45 MAY 17 21:59 NAME.TXT
+-RW------- 1 LBOYD002 CLASSES   30 MAY 17 23:29 NEWFILE1
+-RW------- 1 LBOYD002 CLASSES   30 MAY 17 23:29 NEWFILE2
+-RW------- 1 LBOYD002 CLASSES   30 MAY 17 23:26 NEWFILE3
+-RW------- 1 LBOYD002 CLASSES   30 MAY 17 23:26 NEWFILE4
+-RW------- 1 LBOYD002 CLASSES   29 MAY 17 23:22 OUTPUT1
+-RW------- 1 LBOYD002 CLASSES   29 MAY 17 23:22 OUTPUT2
+-RW------- 1 LBOYD002 CLASSES 2733 MAY 17 22:46 README.MD
+-RW------- 1 LBOYD002 CLASSES   45 MAY 17 23:21 SORTEDNAMES.TXT
+DRWX------ 2 LBOYD002 CLASSES 4096 MAY 17 22:44 SRC
+DRWX------ 2 LBOYD002 CLASSES 4096 MAY 17 23:16 TESTS
+-RW------- 1 LBOYD002 CLASSES   30 MAY 17 23:28 UPPERLOWER.TXT
+-RW------- 1 LBOYD002 CLASSES   66 MAY 17 23:19 VEGGIE.TXT
+lboyd002@hammer$ cat f
+TOTAL 32
+DRWX------ 2 LBOYD002 CLASSES 4096 MAY 17 23:12 BIN
+-RW------- 1 LBOYD002 CLASSES   31 MAY 17 21:53 FILE.TXT
+-RW------- 1 LBOYD002 CLASSES   29 MAY 17 23:21 INPUT.TXT
+-RW------- 1 LBOYD002 CLASSES 1476 MAY 17 16:08 LICENSE
+-RW------- 1 LBOYD002 CLASSES   26 MAY 17 22:13 LOWER.TXT
+-RW------- 1 LBOYD002 CLASSES   30 MAY 17 23:25 LOWERUPPER.TXT
+-RW------- 1 LBOYD002 CLASSES  792 MAY 17 23:17 LS.TXT
+-RW------- 1 LBOYD002 CLASSES  302 MAY 17 16:49 MAKEFILE
+-RW------- 1 LBOYD002 CLASSES   45 MAY 17 21:59 NAME.TXT
+-RW------- 1 LBOYD002 CLASSES   30 MAY 17 23:29 NEWFILE1
+-RW------- 1 LBOYD002 CLASSES   30 MAY 17 23:29 NEWFILE2
+-RW------- 1 LBOYD002 CLASSES   30 MAY 17 23:26 NEWFILE3
+-RW------- 1 LBOYD002 CLASSES   30 MAY 17 23:26 NEWFILE4
+-RW------- 1 LBOYD002 CLASSES   29 MAY 17 23:22 OUTPUT1
+-RW------- 1 LBOYD002 CLASSES   29 MAY 17 23:22 OUTPUT2
+-RW------- 1 LBOYD002 CLASSES 2733 MAY 17 22:46 README.MD
+-RW------- 1 LBOYD002 CLASSES   45 MAY 17 23:21 SORTEDNAMES.TXT
+DRWX------ 2 LBOYD002 CLASSES 4096 MAY 17 22:44 SRC
+DRWX------ 2 LBOYD002 CLASSES 4096 MAY 17 23:16 TESTS
+-RW------- 1 LBOYD002 CLASSES   30 MAY 17 23:28 UPPERLOWER.TXT
+-RW------- 1 LBOYD002 CLASSES   66 MAY 17 23:19 VEGGIE.TXT
+lboyd002@hammer$ history         che   #check of    ic you     f you can input directoy  ly to cat and output to file
+lboyd002@hammer$ cat > outfile1
+hello this is goint to      g to bw in    we    e n in outfilw e
+
+
+lboyd002@hammer$ cat outfie le
+hello this is catlboyd002@hammer$ cat outfile1            #above is wrong file below i   is outfile1
+lboyd002@hammer$ cat outfile1
+hello this is going to be in outfile
+
+
+lboyd002@hammer$ cat <   oou         #outputs outfile to screen, also checks the sma  pacing in    on <
+lboyd002@hammer$ cat <  outfile1
+hello this is going to be in outfile
+
+
+lboyd002@hammer$ cat  < outfile1
+hello this is going to be in outfile
+
+
+lboyd002@hammer$ cat<outfile1
+hello this is going to be in outfile
+
+
+lboyd002@hammer$ #all spacing wi orks wj it  h | and <^[[D           '\ |' and '<'
+lboyd002@hammer$ e #hopign  ng this is enough test cases! 
+lboyd002@hammer$ exit
+~/rshell
+lboyd002@hammer $ exit
+exit
+
+Script done on Sun 17 May 2015 11:46:25 PM PDT
