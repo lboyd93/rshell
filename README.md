@@ -44,9 +44,10 @@ This program has a few bugs.
 
 ### I/O Redirection ###
 
-* When using pipes and I/O Redirection, there must be one space in between all your pipes and arguments.
+* When using input redirection, there must be one space in between all your arguments.
+ex ls >> ls.txt, ls > ls.txt
 
-*
+* When using piping, you cannot put more than 2 pipes together. When you have more than 2 pipes, the rest of the arguments are just ignored.
 
 ##ls##
 
