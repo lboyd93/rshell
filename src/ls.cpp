@@ -88,11 +88,18 @@ void ls_l(const char* dir, bool isA, bool isR){
 	
 	sortDir(dir, dirlist,isA);
 	
+	errno = 0;
 	while(  (filespecs1=readdir(dirp)) != NULL){
 		if(stat(dir, &s)==-1)
 			perror("Error with stat");
 		getTotal(total, s, filespecs1);
 	}
+	
+	if(errno != 0){
+		perror("There was an error with readdir().");
+		exit(1);
+	}
+
 	
 	if(-1 == closedir(dirp)){
 		perror("There was an error with closedir().");

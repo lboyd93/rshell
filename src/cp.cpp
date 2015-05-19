@@ -33,11 +33,17 @@ void two(char *in, char *out) {
 		perror("Open failed");
 
 	int bytes_read, written;
+	
 	while((bytes_read = read(fd1, &buf, 1)) > 0) {
+		if(bytes_read == -1){
+			perror("There was an error with read");
+		}
 		written = write(fd2, &buf, 1);
 		if(written != bytes_read)
 			perror("Write failed");
 	}
+	
+	
 	if(close(fd1) < 0)
 		perror("Close failed");
 	if(close(fd2) < 0)
@@ -55,8 +61,13 @@ void three(char *in, char *out) {
 	
 		char buff[BUFSIZ];
 		int n;
-		while((n = read(fd1, &buff, BUFSIZ)) > 0)
-			write(fd2, &buff, n);
+		while((n = read(fd1, &buff, BUFSIZ)) > 0){
+			if(n == -1){
+				perror("There was an error with read.");
+			}
+			if(write(fd2, &buff, n)==-1)
+				perror("There was an error with write.");
+		}
 		
 		if(close(fd1) < 0)
 			perror("Close failed");
@@ -79,11 +90,20 @@ int main(int argc, char *argv[]) {
 	
 	char *in = argv[1];
 	char *out = argv[2];
-	if(stat(in, &buffer) != 0) {
+	int statin = stat(in, &buffer);
+	int statout = stat(out, &buffer);
+	
+	if(statin == -1)
+		perror("There was an error with stat.");
+	if(statout == -1)
+		perror("There was an error with stat.");
+	
+	
+	if(statin != 0) {
 		cerr << "Error: source file doesn't exist" << endl;
 		return 0;
 	}
-	if(stat(out, &buffer) == 0) {
+	if(statout == 0) {
 		cerr << "Error: destination file already exists" << endl;
 		return 0;
 	}

@@ -89,6 +89,7 @@ void rmoveDir(const char* dirName){
 			exit(1);		
 		}
 		struct dirent *dirFiles;
+		errno = 0;
 		while((dirFiles = readdir(dirp)) != NULL){
 			if( dirFiles->d_name[0] != '.'){
 				string path; 
@@ -105,7 +106,12 @@ void rmoveDir(const char* dirName){
 		 		}					
 			}
 		}
-		closedir(dirp);
+		
+		if(errno != 0)
+			perror("There was an error with readdir.");
+		
+		if(closedir(dirp)==-1)
+			perror("There was an error with closedir.");
 		
 		if(isDirectoryEmpty(dirName)){
 			if(-1 == (rmdir (dirName))){
@@ -119,18 +125,30 @@ void rmoveDir(const char* dirName){
 int isDirectoryEmpty(const char* dirName){
 	int n =0;
 	struct dirent *d;
-	DIR *dir = opendir(dirName);
+	DIR *dir;
+	
+	if(NULL == (dir= opendir(dirName))){
+		perror("opendir");
+		exit(1);		
+	}
+	
+	errno =0;
 	while((d = readdir(dir)) != NULL){
 			if(++n > 2){
 				break;
 			}
 	}
-	closedir(dir);
+	
+	if(errno != 0)
+		perror("there was an error with readdir.");
+	
+	if(closedir(dir) == -1)
+		perror("There was an error with closedir.");
 	if(n <= 2){
-	return 1;	
+		return 1;	
 	}
 	else{
-	return 0;
+		return 0;
 	}
 
 }
