@@ -30,21 +30,63 @@ void forkPipes(char **argv, char **afterPipe);
 void simpleFork(char **argv);
 void getPipes(char** argv);
 
-
-
-
+//interupting ^C signal, do nothing when ^C pushed
 static void handleC(int sigNum){
     //cout << "Caught SIGINT, do nothing now." << endl;
     //exit(0);
     cout << endl;
 }
 
+string nextDir;
+string prevDir;
+
+void fixPath(char *p, char **newPath){
+    int numPath=0;
+    newPath[numPath] = strtok(p,":");
+    while(newPath[numPath] != NULL){
+        numPath++;
+        newPath[numPath] = strtok(NULL, ":");
+    }
+    return;
+}
+
+
+void findHome(string &dir, string home, string tilda){
+    dir.replace(dir.find(home), home.length(), tilda);
+}
+
+void cdCheck(char **argv, string input, char *currDir){
+    if(!strcmp(argv[0], "cd")){
+        if(input.size() == 2){
+            char *home = getenv("HOME");
+            if(home == NULL){
+                perror("There was an error with getenv");
+            }
+            if(chdir(home) == -1){
+                perror("Error with chdir");
+            }
+            prevDir = currDir;
+            nextDir = home;
+        }
+    }
+    return;
+}
 
 int main(){
+    char *path = getenv("PATH");
+    if(path == NULL)
+        perror("There was an error with getenv");
+
+    char *newPath[BUFSIZ];
+    fixPath(path, newPath);
+    
+
+    //make our sigaction struct
     struct sigaction oldAction, newAction;
-
+    
+    //set the sig handler to SIG_IGN
     newAction.sa_handler = SIG_IGN;
-
+    
     sigemptyset (&newAction.sa_mask);
     newAction.sa_flags = 0;
     
@@ -69,11 +111,36 @@ int main(){
 	
 	//execute
 	while(1){
+        
+        char currDir[BUFSIZ];
+        if(getcwd(currDir, sizeof(currDir)) == NULL)
+                perror("Error with getcwd");
+        string curr_dir = currDir;
+        char *home = getenv("HOME");
+        if(home == NULL)
+            perror("Error with getenv");
+        findHome(curr_dir, home, "~");
+
+        cout << login << "@" << host << ":" << curr_dir << "$ ";
+        
+        char *dir = new char[curr_dir.size() + 1];
+        
+        copy(curr_dir.begin(), curr_dir.end(), dir);
+
+        dir[curr_dir.size()] = '\0'; 
+
+        //helps fix infinite loop
         cin.clear();   
-       if (sigaction(SIGINT, &newAction, &oldAction) == 0 && oldAction.sa_handler != SIG_IGN){
+        
+        //sets handler to ignore function
+        int sa=sigaction(SIGINT,&newAction,&oldAction);
+        if(sa==-1)
+            perror("Error with sigaction");
+        if ( sa  == 0 && oldAction.sa_handler != SIG_IGN){
               newAction.sa_handler = handleC;
-              sigaction(SIGINT, &newAction, 0);
-       } 
+              if(sigaction(SIGINT, &newAction, 0)==-1)
+                  perror("Error with sigaction");
+        }
 
 		string input;
 		char buf[1024];
@@ -84,7 +151,6 @@ int main(){
 			perror("There was an error with dup");
 		if(sdo == -1)
 			perror("There was an error with dup");	
-		cout << login << "@" << host << "$ ";
 		
 		//get the input from user
 		getline(cin, input);
@@ -125,6 +191,10 @@ int main(){
 		//for(unsigned i=0; argv[i] != NULL ; i++)
 		//	cout << argv[i] << ' ';
 		
+        if(!strcmp(argv[0], "cd")){
+            cdCheck(argv, input, dir);
+            continue;
+        }
 		IOredir(argv);
 		getPipes(argv);
 		
@@ -133,6 +203,7 @@ int main(){
 		if(dup2(sdo,1) == -1)
 			perror("There was an error with dup2");
 		
+        delete[] dir;
 		delete[] argv;	
 	}
 	
