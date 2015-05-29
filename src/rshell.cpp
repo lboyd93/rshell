@@ -10,6 +10,7 @@
 #include <vector>
 #include <fcntl.h>
 #include <sys/stat.h>
+#include <signal.h>
 
 using namespace std;
 
@@ -29,8 +30,25 @@ void forkPipes(char **argv, char **afterPipe);
 void simpleFork(char **argv);
 void getPipes(char** argv);
 
+
+
+
+static void handleC(int sigNum){
+    //cout << "Caught SIGINT, do nothing now." << endl;
+    //exit(0);
+    cout << endl;
+}
+
+
 int main(){
-	//get username and hostname
+    struct sigaction oldAction, newAction;
+
+    newAction.sa_handler = SIG_IGN;
+
+    sigemptyset (&newAction.sa_mask);
+    newAction.sa_flags = 0;
+    
+    //get username and hostname
 	char login[100];
 	
 	if(getlogin_r(login, sizeof(login)-1)){
@@ -51,8 +69,16 @@ int main(){
 	
 	//execute
 	while(1){
+        cin.clear();   
+       if (sigaction(SIGINT, &newAction, &oldAction) == 0 && oldAction.sa_handler != SIG_IGN){
+              newAction.sa_handler = handleC;
+              sigaction(SIGINT, &newAction, 0);
+       } 
+
 		string input;
-		char buf[1000];
+		char buf[1024];
+		
+		
 		int sdi = dup(0), sdo = dup(1);
 		if(sdi == -1)
 			perror("There was an error with dup");
@@ -72,7 +98,7 @@ int main(){
 			
 		//check for comments
 		checkcomm(input);
-
+        
 		strcpy(buf, input.c_str());
 		
 		//check if user inputs exit	
@@ -128,13 +154,20 @@ void simpleFork(char **argv, bool BG){
 			exit(1);
 		}
 	}
+
+    int wpid;
 	//in parent
 	if(! BG){
-		//error check parent
-		if(wait(&status)==-1){
-			perror("Error in wait");
-			exit(1);
-		}
+        do
+        {
+                wpid = wait(&status);
+        }
+        while (wpid == -1 && errno == EINTR);
+        if (wpid == -1)
+        {
+                perror("wait error");
+                exit(1);
+        }
 	}
 }
 
@@ -320,7 +353,7 @@ void fixSpaces(string &input){
 		if(input[i-1] != '>' && input[i+1] == '>'){
 			//if >> is in the middle of a word
 			if(input[i] == '>' && input[i+1] == '>' && input[i-1] != '>' && i !=0){
-				input.insert(i-1, " ");
+input.insert(i-1, " ");
 				input.insert(i, " ");
 			}	
 			//if | is right before a word
