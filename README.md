@@ -61,6 +61,8 @@ ex ls >> ls.txt, ls > ls.txt
 
 * ex. 'cd_______________PATH' or 'cd________~' or 'cd____________-'
 
+* When using cd and you try to go past the HOME folder, you get an std out of range error.
+
 * Does not work with CTRL-Z
 
 ##ls##

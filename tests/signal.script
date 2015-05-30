@@ -1,0 +1,61 @@
+Script started on Fri 29 May 2015 11:37:56 PM PDT
+~
+lboyd002@hammer $ cd rshell
+~/rshell
+lboyd002@hammer $ bin/rshell
+lboyd002@hammer:~/rshell$ #tes sting the     cd
+lboyd002@hammer:~/rshell$ cd
+lboyd002@hammer:~$ cd -
+lboyd002@hammer:~/rshell$ cd ~
+lboyd002@hammer:~$ #both go to homr   e dir
+lboyd002@hammer:~$ cd rshell/          ls
+a.out  cs100  Desktop	 Downloads  hw2    Pictures  rshell  Videos
+cs10   cs14   Documents  ex.cpp     Music  Public    site    vimfiles
+lboyd002@hammer:~$ cd cs100
+lboyd002@hammer:~/cs100$ ls
+firstrepo  gitlearn  hw0Check  lab2  rshell  rshell-2  ucr-cs100
+lboyd002@hammer:~/cs100$ cd firstrepo
+lboyd002@hammer:~/cs100/firstrepo$ ls
+a.out  main.cpp  README
+lboyd002@hammer:~/cs100/firstrepo$ cd
+lboyd002@hammer:~$ cd cs100/firstrepo/ 
+lboyd002@hammer:~/cs100/firstrepo$ ls
+a.out  main.cpp  README
+lboyd002@hammer:~/cs100/firstrepo$ #same as above
+lboyd002@hammer:~/cs100/firstrepo$ t #testing cd-  -
+lboyd002@hammer:~/cs100/firstrepo$ cd -
+lboyd002@hammer:~$ cd -
+lboyd002@hammer:~/cs100/firstrepo$ #goes back and forth bef tw een the 2 r dirs
+lboyd002@hammer:~/cs100/firstrepo$ #testing with the wrong path
+lboyd002@hammer:~/cs100/firstrepo$ cd fkdslnfgsljd
+Error with chdir: No such file or directory
+lboyd002@hammer:~/cs100/firstrepo$ ls
+a.out  main.cpp  README
+lboyd002@hammer:~/cs100/firstrepo$ cd ~
+lboyd002@hammer:~$ ls
+a.out  cs100  Desktop	 Downloads  hw2    Pictures  rshell  Videos
+cs10   cs14   Documents  ex.cpp     Music  Public    site    vimfiles
+lboyd002@hammer:~$ #prompt changes as directoires change
+lboyd002@hammer:~$ #HOME is replaces   d with ~
+lboyd002@hammer:~$ #now I will test ^C
+lboyd002@hammer:~$ cat
+nksldngsls
+nksldngsls
+nkldfsnflds
+nkldfsnflds
+^C
+lboyd002@hammer:~$ #shell doesn  not exit when ^c C pressed
+lboyd002@hammer:~$ cat /dev/random > randomtxt.txt
+ksdnflnsdlk
+fnsklnsje
+^Clboyd002@hammer:~$ cat tand    randomtxt.txt
+ĞPŠ˜BÖç©îlòÊœ»îòuª9ï
+lboyd002@hammer:~$ #shell does not quit when using ^C
+lboyd002@hammer:~$ #Dont 't kn  ow how else to test control C
+lboyd002@hammer:~$ #hope this is enough tests!
+lboyd002@hammer:~$ exit
+~/rshell
+lboyd002@hammer $ exit
+exit
+
+Script done on Fri 29 May 2015 11:45:17 PM PDT

@@ -76,7 +76,7 @@ int main(){
     //parse the path
     char *newPath[BUFSIZ];
     fixPath(path, newPath);
-
+    
     //make our sigaction struct
     // struct sigaction oldAction, newAction;
 
@@ -117,6 +117,8 @@ int main(){
         if(home == NULL)
             perror("Error with getenv");
         findHome(curr_dir, home, "~");
+        
+        //cout << curr_dir << endl;
 
         cout << login << "@" << host << ":" << curr_dir << "$ ";
 
