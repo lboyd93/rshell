@@ -8,9 +8,9 @@
 #include <unistd.h>	//execvp, fork, gethost, getlogin
 #include <string.h>	//strtok
 #include <vector>
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <signal.h>
+#include <fcntl.h>      //flags
+#include <sys/stat.h>   //stat
+#include <signal.h>     //sigaction
 
 using namespace std;
 
@@ -29,19 +29,14 @@ void IOredir(char **argv);
 void forkPipes(char **argv, char **afterPipe, char **path);
 void simpleFork(char **argv, char **path);
 void getPipes(char** argv, char **path);
-void execArgs(char **parsedpath, char **argv);
-void execPath(char *p, char **argv);
+void execPath(char **parsedpath, char **argv);
+void cdCheck(char **argv, string input, char *currDir);
 
 //interupting ^C signal, do nothing when ^C pushed
 static void handleC(int sigNum){
     //cout << "Caught SIGINT, do nothing now." << endl;
-    //exit(0);
     cout << endl;
 }
-
-//needed to keep track of paths
-string nextDir;
-string prevDir;
 
 //parses the path so you know which commands you are working with
 void fixPath(char *p, char **newPath){
@@ -59,77 +54,13 @@ void findHome(string &dir, string home, string tilda){
     dir.replace(dir.find(home), home.length(), tilda);
 }
 
-//does a check for cd
-void cdCheck(char **argv, string input, char *currDir){
-    //this is when only 'cd' or 'cd ~'
-    if(input.size() == 2 || (input.size() == 4 && !strcmp(argv[1], "~"))){
-        //change to the home directory
-        char *setDir = getenv("PWD");
-        if(setDir == NULL){
-            perror("There was an error with getenv");
-        }
-        //save OLDPWD
-        if(setenv("OLDPWD", setDir, 1) == -1)
-            perror("There was an error with setenv");
-        setDir = getenv("HOME");
-        if(setDir == NULL){
-            perror("Error with getenv");
-        }
-        //set current to HOME
-        if(setenv("PWD", setDir, 1) == -1)
-            perror("Error with setenv");
-        if(chdir(setDir) == -1)
-            perror("Error with chdir");
-    }
-    //this is when 'cd -'
-    else if(input.size() == 4 && !strcmp(argv[1],"-")){
-        //spots to save old directory and new one
-        char *setDir;
-        char *setDir1;
-        //save the current
-        setDir = getenv("PWD");
-        //save the old
-        setDir1 = getenv("OLDPWD");
-        if(setDir == NULL)
-            perror("Error with getenv");
-        if(setDir1 == NULL)
-            perror("Error with getenv");
-        //switch to old
-        if(chdir(setDir1)== -1){
-            perror("Error with chdir");
-        }
-        //swap the two saved
-        if(setenv("PWD", setDir1, 1) == -1)
-            perror("Error with setenv");
-        if(setenv("OLDPWD", setDir, 1) == -1)
-            perror("Error with setenv");
-    }
-    //this is for 'cd PATH'
-    else if( strcmp(argv[1], "-") && strcmp(argv[1], "~") ){
-        //save current
-        char *setDir = getenv("PWD");
-        if(setDir == NULL)
-            perror("Error with getenv");
-        //set old
-        if(setenv("OLDPWD", setDir, 1) == -1)
-            perror("Error with setenv");
-        //set current
-        if(setenv("PWD", argv[1], 1) == -1)
-            perror("Error with setenv");
-        //change to new
-        if(-1 == chdir(argv[1]))
-            perror("Error with chdir");
-    }
-    return;
-}
-
 
 int main(){
     //get the path we are in
     char *path = getenv("PATH");
     if(path == NULL)
         perror("There was an error with getenv");
-    
+
     //parse the path
     char *newPath[BUFSIZ];
     fixPath(path, newPath);
@@ -174,9 +105,9 @@ int main(){
         if(home == NULL)
             perror("Error with getenv");
         findHome(curr_dir, home, "~");
-        
+
         cout << login << "@" << host << ":" << curr_dir << "$ ";
-        
+
         //get the current directory as a c_str
         char *dir = new char[curr_dir.size() + 1];
         copy(curr_dir.begin(), curr_dir.end(), dir);
@@ -206,6 +137,9 @@ int main(){
 
         //get the input from user
         getline(cin, input);
+        
+        //check for comments
+        checkcomm(input);
 
         //check if user pushes enter 
         if(input == "")
@@ -213,9 +147,6 @@ int main(){
 
         //checks the spacing
         fixSpaces(input);
-
-        //check for comments
-        checkcomm(input);
 
         strcpy(buf, input.c_str());
 
@@ -242,7 +173,7 @@ int main(){
 
         //for(unsigned i=0; argv[i] != NULL ; i++)
         //	cout << argv[i] << ' ';
-        
+
         //check for cd
         if(!strcmp(argv[0], "cd")){
             cdCheck(argv, input, currDir);
@@ -252,7 +183,7 @@ int main(){
         //for(unsigned i=0; argv[i] != NULL ; i++)
         //    cout << argv[i] << ' ';
         //cout << endl;
-        
+
         //check IO redirection and pipes
         IOredir(argv);
         getPipes(argv, newPath);
@@ -278,7 +209,7 @@ void simpleFork(char **argv, bool BG, char **path){
         exit(1);
     }
     else if(i == 0) {
-        execArgs(path, argv);
+        execPath(path, argv);
     }
 
     int wpid;
@@ -352,7 +283,7 @@ void forkPipes(char **argv, char **afterPipe, char **path){
             perror("Error with dup2 in piping.");
         }
         //execute
-        execArgs(path, argv);
+        execPath(path, argv);
     }
     else
         exit(0);
@@ -490,70 +421,112 @@ void fixSpaces(string &input){
     }
 }
 
-void addPath(char *newPath, char *path, char *command){
-    
-    strcpy(newPath, path);
-    strcat(newPath, "/");
-    strcat(newPath, command);
-}
+//does not work, too many syntax errors
+/*void addPath(char newPath, char **p, char *command, int pos){
 
-void execArgs(char **parsedpath, char **argv){
-    for(int i=0; parsedpath[i] != '\0'; i++)
+  strcpy(newPath, p[pos]);
+  if(newPath[strlen(newPath)-1] != '/')
+  strcat(newPath, "/");
+  strcat(newPath, command);
+  }*/
+
+void execPath(char **p, char **argv){
+    for(int pos=0; p[pos] != '\0'; pos++)
     {
-        char check[250] = {0};
+        char path[BUFSIZ] = {0};
+        char *args[BUFSIZ];
+        
+        // addPath(path, p, argv[0], pos);
+        //copy the path onto the newpath
+        strcpy(path,p[pos]);
+        //append a '/' on the end of the path
+        if(path[strlen(path)-1] != '/')
+            strcat(path, "/");
+        //append the command to the end
+        strcat(path,argv[0]);
+        
+        //set our new command array to path
+        args[0] = path;
+        
+        //go through the rest of the arguments and append it to new command array
+        for(int index=1; argv[index] != NULL; index++)
+            args[index] = argv[index];
+        
 
-        strcpy(check,parsedpath[i]);
-        if(check[strlen(check)-1] != '/')
-            strcat(check, "/");
-        strcat(check,argv[0]);
-
-
-        char *newargv[50] = {0};
-        newargv[0] = check;
-        for(int j=1; argv[j] != NULL; j++)
-            newargv[j] = argv[j];
-
-        if(-1 == execv(newargv[0], newargv)) ; 
+        if(-1 == execv(args[0], args));
+           // perror("Error with execv"); 
         else
             return;
     }
-    if(errno)
-    {
-        perror("problem with execv. " );
+
+    //set and check errno
+    if(errno > 0){
+        perror("Error with execv");
         exit(1);
     }
 }
 
-//execs path
-void execPath(char *p, char **argv){
-    bool found = false;
-
-    char *path = p;
-    char *afterPath;
-
-    for(int i = 0; path[i] != '\0'; ++i){
-        if(path[i] == ':'){
-            found = true;
-            path[i] = '\0';
-
-            char *beforePath = path;
-            afterPath = i + path + 1;
-            char newPath[BUFSIZ];
-            addPath(newPath, beforePath, argv[0]);
-            if(execv(newPath, argv) == -1){
-                perror("Error with execv");
-            }
-            else return;
-
-            execPath(afterPath, argv);
+//does a check for cd
+void cdCheck(char **argv, string input, char *currDir){
+    //this is when only 'cd' or 'cd ~'
+    if(input.size() == 2 || (input.size() == 4 && !strcmp(argv[1], "~"))){
+        //change to the home directory
+        char *setDir = getenv("PWD");
+        if(setDir == NULL){
+            perror("There was an error with getenv");
         }
-    }
-
-    if(!found){
-        char newPath[BUFSIZ];
-        addPath(newPath, path, argv[0]);
-        if(execv(newPath, argv) == -1){
-            perror("error with execv");
+        //save OLDPWD
+        if(setenv("OLDPWD", setDir, 1) == -1)
+            perror("There was an error with setenv");
+        setDir = getenv("HOME");
+        if(setDir == NULL){
+            perror("Error with getenv");
         }
+        //set current to HOME
+        if(setenv("PWD", setDir, 1) == -1)
+            perror("Error with setenv");
+        if(chdir(setDir) == -1)
+            perror("Error with chdir");
     }
+    //this is when 'cd -'
+    else if(input.size() == 4 && !strcmp(argv[1],"-")){
+        //spots to save old directory and new one
+        char *setDir;
+        char *setDir1;
+        //save the current
+        setDir = getenv("PWD");
+        //save the old
+        setDir1 = getenv("OLDPWD");
+        if(setDir == NULL)
+            perror("Error with getenv");
+        if(setDir1 == NULL)
+            perror("Error with getenv");
+        //switch to old
+        if(chdir(setDir1)== -1){
+            perror("Error with chdir");
+        }
+        //swap the two saved
+        if(setenv("PWD", setDir1, 1) == -1)
+            perror("Error with setenv");
+        if(setenv("OLDPWD", setDir, 1) == -1)
+            perror("Error with setenv");
+    }
+    //this is for 'cd PATH'
+    else if( strcmp(argv[1], "-") && strcmp(argv[1], "~") ){
+        //save current
+        char *setDir = getenv("PWD");
+        if(setDir == NULL)
+            perror("Error with getenv");
+        //set old
+        if(setenv("OLDPWD", setDir, 1) == -1)
+            perror("Error with setenv");
+        //set current
+        if(setenv("PWD", argv[1], 1) == -1)
+            perror("Error with setenv");
+        //change to new
+        if(-1 == chdir(argv[1]))
+            perror("Error with chdir");
+    }
+    return;
 }
+
