@@ -59,7 +59,7 @@ ex ls >> ls.txt, ls > ls.txt
 
 * Does not work when there are a lot of spaces in between cd and the Path. 
 
-* ex. 'cd PATH' or 'cd               ~' or 'cd          ~'
+* ex. 'cd_______________PATH' or 'cd________~' or 'cd____________-'
 
 * Does not work with CTRL-Z
 
