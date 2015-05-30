@@ -12,6 +12,12 @@ The purpose of this program is to execute a simple command shell named rshell wh
 
 * Rshell works with piping two or more  programs together.
 
+* Contains a fully working implementation of cd
+
+* Can change directories just like bash shell
+
+* When CTRL-C is pushed, instead of quiting the program, it ignores the signal.
+
 ## Add Ons ##
 
 ### ls ###
@@ -48,6 +54,14 @@ This program has a few bugs.
 ex ls >> ls.txt, ls > ls.txt
 
 * When using piping, you cannot put more than 2 pipes together. When you have more than 2 pipes, the rest of the arguments are just ignored.
+
+###cd and Signals
+
+* Does not work when there are a lot of spaces in between cd and the Path. 
+
+* ex. 'cd PATH' or 'cd               ~' or 'cd          ~'
+
+* Does not work with CTRL-Z
 
 ##ls##
 
