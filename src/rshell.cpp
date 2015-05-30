@@ -26,9 +26,11 @@ void checkcomm(string &str){
 
 void fixSpaces(string &input);
 void IOredir(char **argv);
-void forkPipes(char **argv, char **afterPipe);
-void simpleFork(char **argv);
-void getPipes(char** argv);
+void forkPipes(char **argv, char **afterPipe, char **path);
+void simpleFork(char **argv, char **path);
+void getPipes(char** argv, char **path);
+void execArgs(char **parsedpath, char **argv);
+void execPath(char *p, char **argv);
 
 //interupting ^C signal, do nothing when ^C pushed
 static void handleC(int sigNum){
@@ -37,9 +39,11 @@ static void handleC(int sigNum){
     cout << endl;
 }
 
-string newDir;
+//needed to keep track of paths
+string nextDir;
 string prevDir;
 
+//parses the path so you know which commands you are working with
 void fixPath(char *p, char **newPath){
     int numPath=0;
     newPath[numPath] = strtok(p,":");
@@ -50,13 +54,16 @@ void fixPath(char *p, char **newPath){
     return;
 }
 
-
+//changes 'HOME' to '~'
 void findHome(string &dir, string home, string tilda){
     dir.replace(dir.find(home), home.length(), tilda);
 }
 
+//does a check for cd
 void cdCheck(char **argv, string input, char *currDir){
+    //this is when only 'cd'
     if(input.size() == 2){
+        //change to the home directory
         char *home = getenv("HOME");
         if(home == NULL){
             perror("There was an error with getenv");
@@ -64,40 +71,48 @@ void cdCheck(char **argv, string input, char *currDir){
         if(chdir(home) == -1){
             perror("Error with chdir");
         }
+        //change the directories
         prevDir = currDir;
-        newDir = home;
+        nextDir = home;
     }
+    //this is when 'cd -'
     else if(input.size() == 4 && !strcmp(argv[1],"-")){
-        cout << "Here is the prevDir: " << prevDir << endl;
-        cout << "Here is newDir: " << newDir << endl;
-        
-        if(chdir(prevDir.c_str()) == -1){
+        //cout << "Here is the prevDir: " << prevDir << endl;
+        //cout << "Here is nextDir: " << nextDir << endl;
+        //change back to the previous directory
+        if(chdir(prevDir.c_str())== -1){
             perror("Error with chdir");
         }
         //switch the nextdir with prevdir since we switched
         string curr = prevDir;
-        prevDir = newDir;
-        newDir = curr;
-        
-        cout << "Here is the prevDir: " << prevDir << endl;
-        cout << "Here is newDir: " << newDir << endl;
+        prevDir = nextDir;
+        nextDir = curr;
+
+        //cout << "Here is the prevDir: " << prevDir << endl;
+        //cout << "Here is newDir: " << nextDir << endl;
     }
+    //this is for 'cd PATH'
     else if( strcmp(argv[1], "-")){
         if(-1 == chdir(argv[1])){
             perror("Error with chdir");
         }
+        //keep track to previous and current directories
+        prevDir = currDir;
+        nextDir = argv[1];
     }
     return;
 }
 
+
 int main(){
+    //get the path we are in
     char *path = getenv("PATH");
     if(path == NULL)
         perror("There was an error with getenv");
-
+    
+    //parse the path
     char *newPath[BUFSIZ];
     fixPath(path, newPath);
-
 
     //make our sigaction struct
     struct sigaction oldAction, newAction;
@@ -129,25 +144,25 @@ int main(){
 
     //execute
     while(1){
-
+        //get the current working directory
         char currDir[BUFSIZ];
         if(getcwd(currDir, sizeof(currDir)) == NULL)
             perror("Error with getcwd");
         string curr_dir = currDir;
         char *home = getenv("HOME");
+        //find and change HOME to '~'
         if(home == NULL)
             perror("Error with getenv");
         findHome(curr_dir, home, "~");
-
+        
         cout << login << "@" << host << ":" << curr_dir << "$ ";
-
+        
+        //get the current directory as a c_str
         char *dir = new char[curr_dir.size() + 1];
-
         copy(curr_dir.begin(), curr_dir.end(), dir);
-
         dir[curr_dir.size()] = '\0'; 
 
-        //helps fix infinite loop
+        //helps fix infinite loop from signal
         cin.clear();   
 
         //sets handler to ignore function
@@ -162,7 +177,6 @@ int main(){
 
         string input;
         char buf[1024];
-
 
         int sdi = dup(0), sdo = dup(1);
         if(sdi == -1)
@@ -208,13 +222,20 @@ int main(){
 
         //for(unsigned i=0; argv[i] != NULL ; i++)
         //	cout << argv[i] << ' ';
-
+        
+        //check for cd
         if(!strcmp(argv[0], "cd")){
-            cdCheck(argv, input, dir);
+            cdCheck(argv, input, currDir);
             continue;
         }
+
+        //for(unsigned i=0; argv[i] != NULL ; i++)
+        //    cout << argv[i] << ' ';
+        //cout << endl;
+        
+        //check IO redirection and pipes
         IOredir(argv);
-        getPipes(argv);
+        getPipes(argv, newPath);
 
         if(dup2(sdi, 0) == -1)
             perror("There was an error with dup2");
@@ -228,7 +249,7 @@ int main(){
     return 0;
 }
 
-void simpleFork(char **argv, bool BG){
+void simpleFork(char **argv, bool BG, char **path){
     int status = 0;
     int i = fork();
     if(i == -1){
@@ -237,11 +258,7 @@ void simpleFork(char **argv, bool BG){
         exit(1);
     }
     else if(i == 0) {
-        //error check execvp
-        if (-1==execvp(argv[0], argv)) {
-            perror("execvp didn't work correctly");
-            exit(1);
-        }
+        execArgs(path, argv);
     }
 
     int wpid;
@@ -260,7 +277,7 @@ void simpleFork(char **argv, bool BG){
     }
 }
 
-void getPipes(char** argv){
+void getPipes(char** argv, char **path){
     bool pipeFound = false;
     //save spots for the beginning arguments and ending arguments
     char **args = argv;
@@ -274,7 +291,7 @@ void getPipes(char** argv){
             argv[i] = '\0';
             char** beforeA = args;
             nextA = args + i + 1;
-            forkPipes(beforeA, nextA);
+            forkPipes(beforeA, nextA, path);
             break;
         }
     }
@@ -285,12 +302,12 @@ void getPipes(char** argv){
             if(strcmp(nextA[i], "&") == 0)
                 BG=true;
         }
-        simpleFork(nextA, BG);
+        simpleFork(nextA, BG, path);
     }
 }
 
 //execution if the command line has pipes
-void forkPipes(char **argv, char **afterPipe){
+void forkPipes(char **argv, char **afterPipe, char **path){
     int fd[2];
     int pid;
     //pipe new file descriptors
@@ -315,14 +332,11 @@ void forkPipes(char **argv, char **afterPipe){
             perror("Error with dup2 in piping.");
         }
         //execute
-        if(execvp(argv[0], argv) == -1){
-            perror("There was an error with execvp piping");
-            exit(1);
-        }
-        else{
-            exit(0);
-        }	
+        execArgs(path, argv);
     }
+    else
+        exit(0);
+
 
     //in parent
     //save stdin
@@ -346,7 +360,7 @@ void forkPipes(char **argv, char **afterPipe){
 
     //while(waitpid(-1, &status, 0) >= 0);
     //check for pipes after we execute
-    getPipes(afterPipe);
+    getPipes(afterPipe, path);
 
     if(dup2(save,0)==-1){
         perror("Error with dup2 in piping.");
@@ -453,5 +467,73 @@ void fixSpaces(string &input){
         input.insert(i, " ");
 
         }*/
+    }
+}
+
+void addPath(char *newPath, char *path, char *command){
+    
+    strcpy(newPath, path);
+    strcat(newPath, "/");
+    strcat(newPath, command);
+}
+
+void execArgs(char **parsedpath, char **argv){
+    for(int i=0; parsedpath[i] != '\0'; i++)
+    {
+        char check[250] = {0};
+
+        strcpy(check,parsedpath[i]);
+        if(check[strlen(check)-1] != '/')
+            strcat(check, "/");
+        strcat(check,argv[0]);
+
+
+        char *newargv[50] = {0};
+        newargv[0] = check;
+        for(int j=1; argv[j] != NULL; j++)
+            newargv[j] = argv[j];
+
+        if(-1 == execv(newargv[0], newargv)) ; 
+        else
+            return;
+    }
+    if(errno)
+    {
+        perror("problem with execv. " );
+        exit(1);
+    }
+}
+
+//execs path
+void execPath(char *p, char **argv){
+    bool found = false;
+
+    char *path = p;
+    char *afterPath;
+
+    for(int i = 0; path[i] != '\0'; ++i){
+        if(path[i] == ':'){
+            found = true;
+            path[i] = '\0';
+
+            char *beforePath = path;
+            afterPath = i + path + 1;
+            char newPath[BUFSIZ];
+            addPath(newPath, beforePath, argv[0]);
+            if(execv(newPath, argv) == -1){
+                perror("Error with execv");
+            }
+            else return;
+
+            execPath(afterPath, argv);
+        }
+    }
+
+    if(!found){
+        char newPath[BUFSIZ];
+        addPath(newPath, path, argv[0]);
+        if(execv(newPath, argv) == -1){
+            perror("error with execv");
+        }
     }
 }
