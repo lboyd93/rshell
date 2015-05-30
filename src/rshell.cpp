@@ -61,44 +61,64 @@ void findHome(string &dir, string home, string tilda){
 
 //does a check for cd
 void cdCheck(char **argv, string input, char *currDir){
-    //this is when only 'cd'
-    if(input.size() == 2){
+    //this is when only 'cd' or 'cd ~'
+    if(input.size() == 2 || (input.size() == 4 && !strcmp(argv[1], "~"))){
         //change to the home directory
-        char *home = getenv("HOME");
-        if(home == NULL){
+        char *setDir = getenv("PWD");
+        if(setDir == NULL){
             perror("There was an error with getenv");
         }
-        if(chdir(home) == -1){
-            perror("Error with chdir");
+        //save OLDPWD
+        if(setenv("OLDPWD", setDir, 1) == -1)
+            perror("There was an error with setenv");
+        setDir = getenv("HOME");
+        if(setDir == NULL){
+            perror("Error with getenv");
         }
-        //change the directories
-        prevDir = currDir;
-        nextDir = home;
+        //set current to HOME
+        if(setenv("PWD", setDir, 1) == -1)
+            perror("Error with setenv");
+        if(chdir(setDir) == -1)
+            perror("Error with chdir");
     }
     //this is when 'cd -'
     else if(input.size() == 4 && !strcmp(argv[1],"-")){
-        //cout << "Here is the prevDir: " << prevDir << endl;
-        //cout << "Here is nextDir: " << nextDir << endl;
-        //change back to the previous directory
-        if(chdir(prevDir.c_str())== -1){
+        //spots to save old directory and new one
+        char *setDir;
+        char *setDir1;
+        //save the current
+        setDir = getenv("PWD");
+        //save the old
+        setDir1 = getenv("OLDPWD");
+        if(setDir == NULL)
+            perror("Error with getenv");
+        if(setDir1 == NULL)
+            perror("Error with getenv");
+        //switch to old
+        if(chdir(setDir1)== -1){
             perror("Error with chdir");
         }
-        //switch the nextdir with prevdir since we switched
-        string curr = prevDir;
-        prevDir = nextDir;
-        nextDir = curr;
-
-        //cout << "Here is the prevDir: " << prevDir << endl;
-        //cout << "Here is newDir: " << nextDir << endl;
+        //swap the two saved
+        if(setenv("PWD", setDir1, 1) == -1)
+            perror("Error with setenv");
+        if(setenv("OLDPWD", setDir, 1) == -1)
+            perror("Error with setenv");
     }
     //this is for 'cd PATH'
-    else if( strcmp(argv[1], "-")){
-        if(-1 == chdir(argv[1])){
+    else if( strcmp(argv[1], "-") && strcmp(argv[1], "~") ){
+        //save current
+        char *setDir = getenv("PWD");
+        if(setDir == NULL)
+            perror("Error with getenv");
+        //set old
+        if(setenv("OLDPWD", setDir, 1) == -1)
+            perror("Error with setenv");
+        //set current
+        if(setenv("PWD", argv[1], 1) == -1)
+            perror("Error with setenv");
+        //change to new
+        if(-1 == chdir(argv[1]))
             perror("Error with chdir");
-        }
-        //keep track to previous and current directories
-        prevDir = currDir;
-        nextDir = argv[1];
     }
     return;
 }
