@@ -65,6 +65,10 @@ ex ls >> ls.txt, ls > ls.txt
 
 * Does not work with CTRL-Z
 
+* The 'cd -' command is not consistent.
+Sometimes it works, other times you get an error saying that the directory does not work.
+If you use it a couple times, it goes back and forth between the two.
+
 ##ls##
 
 This implementation of ls has a few known bugs.
