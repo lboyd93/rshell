@@ -122,11 +122,6 @@ int main(){
 
         cout << login << "@" << host << ":" << curr_dir << "$ ";
 
-        //get the current directory as a c_str
-        char *dir = new char[curr_dir.size() + 1];
-        copy(curr_dir.begin(), curr_dir.end(), dir);
-        dir[curr_dir.size()] = '\0'; 
-
         //helps fix infinite loop from signal
         cin.clear();   
 
@@ -227,7 +222,6 @@ int main(){
         if(dup2(sdo,1) == -1)
             perror("There was an error with dup2");
 
-        delete[] dir;
         delete[] argv;	
     }
 
@@ -468,7 +462,7 @@ void execPath(char **p, char **argv){
     for(int pos=0; p[pos] != '\0'; pos++)
     {
         char path[BUFSIZ] = {0};
-        char *args[BUFSIZ];
+        char **args = new char*[BUFSIZ];
 
         // addPath(path, p, argv[0], pos);
         //copy the path onto the newpath
@@ -491,6 +485,7 @@ void execPath(char **p, char **argv){
         // perror("Error with execv"); 
         else
             return;
+        delete[] args;
     }
 
     //set and check errno
@@ -505,6 +500,7 @@ void cdCheck(char **argv, string input, char *currDir){
     //this is when only 'cd' or 'cd ~'
     if(input.size() == 2 || (input.size() == 4 && !strcmp(argv[1], "~"))){
         //change to the home directory
+        //char *setDir = new char[BUFSIZ];
         char *setDir = getenv("PWD");
         if(setDir == NULL){
             perror("There was an error with getenv");
@@ -521,16 +517,17 @@ void cdCheck(char **argv, string input, char *currDir){
             perror("Error with setenv");
         if(chdir(setDir) == -1)
             perror("Error with chdir");
+        //delete setDir;
     }
     //this is when 'cd -'
     else if(input.size() == 4 && !strcmp(argv[1],"-")){
         //spots to save old directory and new one
-        char *setDir;
-        char *setDir1;
+        //char *setDir = new char[BUFSIZ];
+        //char *setDir1 = new char[BUFSIZ];
         //save the current
-        setDir = getenv("PWD");
+        char *setDir = getenv("PWD");
         //save the old
-        setDir1 = getenv("OLDPWD");
+        char *setDir1 = getenv("OLDPWD");
         if(setDir == NULL)
             perror("Error with getenv");
         if(setDir1 == NULL)
@@ -544,10 +541,13 @@ void cdCheck(char **argv, string input, char *currDir){
             perror("Error with setenv");
         if(setenv("OLDPWD", setDir, 1) == -1)
             perror("Error with setenv");
+        //delete setDir;
+        //delete setDir1;
     }
     //this is for 'cd PATH'
     else if( strcmp(argv[1], "-") && strcmp(argv[1], "~") ){
         //save current
+        //char *setDir = new char[BUFSIZ];
         char *setDir = getenv("PWD");
         if(setDir == NULL)
             perror("Error with getenv");
@@ -560,7 +560,9 @@ void cdCheck(char **argv, string input, char *currDir){
         //change to new
         if(-1 == chdir(argv[1]))
             perror("Error with chdir");
+        //delete setDir;
     }
+
     return;
 }
 
