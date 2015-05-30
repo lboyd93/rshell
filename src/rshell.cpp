@@ -32,10 +32,22 @@ void getPipes(char** argv, char **path);
 void execPath(char **parsedpath, char **argv);
 void cdCheck(char **argv, string input, char *currDir);
 
+int current = 0;
+unsigned char sig_flag = 0;
 //interupting ^C signal, do nothing when ^C pushed
 static void handleC(int sigNum){
     //cout << "Caught SIGINT, do nothing now." << endl;
-    cout << endl;
+    if(sigNum == SIGINT)
+    {
+        cout << endl;
+        //kill(current, SIGKILL); 
+        //signal(SIGINT, SIG_IGN);
+    }
+   // else if( sigNum == SIGTSTP){
+   //     cout << endl;
+   //     if(current != 0){
+   //         kill(current, SIGSTOP);
+     //   }
 }
 
 //parses the path so you know which commands you are working with
@@ -66,13 +78,13 @@ int main(){
     fixPath(path, newPath);
 
     //make our sigaction struct
-    struct sigaction oldAction, newAction;
+    // struct sigaction oldAction, newAction;
 
     //set the sig handler to SIG_IGN
-    newAction.sa_handler = SIG_IGN;
+    //newAction.sa_handler = SIG_IGN;
 
-    sigemptyset (&newAction.sa_mask);
-    newAction.sa_flags = 0;
+    //sigemptyset (&newAction.sa_mask);
+    //newAction.sa_flags = 0;
 
     //get username and hostname
     char login[100];
@@ -116,16 +128,36 @@ int main(){
         //helps fix infinite loop from signal
         cin.clear();   
 
-        //sets handler to ignore function
-        int sa=sigaction(SIGINT,&newAction,&oldAction);
-        if(sa==-1)
-            perror("Error with sigaction");
-        if ( sa  == 0 && oldAction.sa_handler != SIG_IGN){
-            newAction.sa_handler = handleC;
-            if(sigaction(SIGINT, &newAction, 0)==-1)
-                perror("Error with sigaction");
-        }
+        //make our sigaction struct
+        struct sigaction oldaction, newAction;
 
+        //set the sig handler to SIG_IGN
+        newAction.sa_handler = handleC;
+
+        //sigemptyset (&newAction.sa_mask);
+        newAction.sa_flags = SA_SIGINFO;
+
+        //sets handler to ignore function
+        int sa=sigaction(SIGINT,&oldaction,NULL);
+        if(sa==-1){
+            perror("Error with sigaction");
+            exit(1);
+        }
+        if ( sa  == 0 && oldaction.sa_handler != SIG_IGN){
+        //newAction.sa_handler = handleC;
+            if(sigaction(SIGINT, &newAction, NULL)==-1)
+               perror("Error with sigaction");
+        }
+        /*
+        if((sa = sigaction(SIGTSTP, &oldaction, NULL)))
+                perror("sigaction");
+       if(oldaction.sa_handler != SIG_IGN){
+            if(-1 == (sa = sigaction(SIGTSTP, &newAction, NULL))){
+                perror("sigaction");
+            }
+        */
+        
+        //signal(SIGINT, handleC);
         string input;
         char buf[1024];
 
@@ -137,7 +169,7 @@ int main(){
 
         //get the input from user
         getline(cin, input);
-        
+
         //check for comments
         checkcomm(input);
 
@@ -435,7 +467,7 @@ void execPath(char **p, char **argv){
     {
         char path[BUFSIZ] = {0};
         char *args[BUFSIZ];
-        
+
         // addPath(path, p, argv[0], pos);
         //copy the path onto the newpath
         strcpy(path,p[pos]);
@@ -444,17 +476,17 @@ void execPath(char **p, char **argv){
             strcat(path, "/");
         //append the command to the end
         strcat(path,argv[0]);
-        
+
         //set our new command array to path
         args[0] = path;
-        
+
         //go through the rest of the arguments and append it to new command array
         for(int index=1; argv[index] != NULL; index++)
             args[index] = argv[index];
-        
+
 
         if(-1 == execv(args[0], args));
-           // perror("Error with execv"); 
+        // perror("Error with execv"); 
         else
             return;
     }
