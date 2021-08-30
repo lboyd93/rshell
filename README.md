@@ -35,10 +35,10 @@ Rshell contains a fully working implementation of rm comparable to bash rm. It r
 ### mv ###
 
 Rshell contains a fully working implementation of mv that is comparable to bash mv. It takes as many files and/or directories and moves them to the last directory in your command line. With mv you can also rename a file.
+ 
+# BUGS #
 
-#BUGS#
-
-##rshell##
+## rshell ##
 
 This program has a few bugs. 
 
@@ -55,7 +55,7 @@ ex ls >> ls.txt, ls > ls.txt
 
 * When using piping, you cannot put more than 2 pipes together. When you have more than 2 pipes, the rest of the arguments are just ignored.
 
-###cd and Signals
+### cd and Signals ###
 
 * Does not work when there are a lot of spaces in between cd and the Path. 
 
@@ -69,7 +69,7 @@ ex ls >> ls.txt, ls > ls.txt
 Sometimes it works, other times you get an error saying that the directory does not work.
 If you use it a couple times, it goes back and forth between the two.
 
-##ls##
+## ls ##
 
 This implementation of ls has a few known bugs.
 
